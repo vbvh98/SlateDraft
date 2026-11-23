@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_TITLE_PAGE } from '../data/templates';
 import {
   createDraftSnapshot,
@@ -126,7 +126,17 @@ describe('Draft Snapshot & Revision Comparison Engine', () => {
     expect(added[1].afterText).toBe('Drive faster.');
   });
 
-  it('exports only changed scenes to Fountain and omits untouched scenes', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('exports only changed scenes to Fountain via Rust IPC and omits untouched scenes', async () => {
+    const invoke = vi.fn(async (_cmd: string, args?: Record<string, unknown>) => {
+      const blocks = (args?.blocks as ScriptBlock[]) ?? [];
+      return `Title: ${String(args?.title)}\n${blocks.map((b) => b.text).join('\n')}`;
+    });
+    vi.stubGlobal('window', { __TAURI_INTERNALS__: { invoke } });
+
     const base: ScriptBlock[] = [
       makeBlock('s1', 'scene-heading', 'INT. CAFE - DAY', { sceneNumber: '1' }),
       makeBlock('a1', 'action', 'Untouched opening scene.'),
@@ -145,17 +155,26 @@ describe('Draft Snapshot & Revision Comparison Engine', () => {
       makeBlock('a3', 'action', 'Quiet compartment.'),
     ];
 
-    const fountain = exportChangedScenesFountain(DEFAULT_TITLE_PAGE, base, current);
+    const fountain = await exportChangedScenesFountain(DEFAULT_TITLE_PAGE, base, current);
 
+    expect(invoke).toHaveBeenCalledWith('export_script_fountain', {
+      title: DEFAULT_TITLE_PAGE.title,
+      author: DEFAULT_TITLE_PAGE.writtenBy,
+      blocks: [current[2], current[3]],
+    });
     expect(fountain).toContain(`Title: ${DEFAULT_TITLE_PAGE.title}`);
-    expect(fountain).toContain('EXT. STATION - NIGHT #2#');
+    expect(fountain).toContain('EXT. STATION - NIGHT');
     expect(fountain).toContain('Train screeches to a sudden halt.');
     expect(fountain).not.toContain('INT. CAFE - DAY');
-    expect(fountain).not.toContain('Untouched opening scene.');
-    expect(fountain).not.toContain('INT. TRAIN - NIGHT');
   });
 
-  it('includes a scene in changed-scenes Fountain export when a block is removed from it', () => {
+  it('includes a scene in changed-scenes Fountain export when a block is removed from it', async () => {
+    const invoke = vi.fn(async (_cmd: string, args?: Record<string, unknown>) => {
+      const blocks = (args?.blocks as ScriptBlock[]) ?? [];
+      return blocks.map((b) => b.text).join('\n');
+    });
+    vi.stubGlobal('window', { __TAURI_INTERNALS__: { invoke } });
+
     const base: ScriptBlock[] = [
       makeBlock('s1', 'scene-heading', 'INT. HALLWAY - DAY', { sceneNumber: '1' }),
       makeBlock('a1', 'action', 'Footsteps echo.'),
@@ -167,8 +186,13 @@ describe('Draft Snapshot & Revision Comparison Engine', () => {
       makeBlock('a1', 'action', 'Footsteps echo.'),
     ];
 
-    const fountain = exportChangedScenesFountain(DEFAULT_TITLE_PAGE, base, current);
-    expect(fountain).toContain('INT. HALLWAY - DAY #1#');
+    const fountain = await exportChangedScenesFountain(DEFAULT_TITLE_PAGE, base, current);
+    expect(invoke).toHaveBeenCalledWith('export_script_fountain', {
+      title: DEFAULT_TITLE_PAGE.title,
+      author: DEFAULT_TITLE_PAGE.writtenBy,
+      blocks: current,
+    });
+    expect(fountain).toContain('INT. HALLWAY - DAY');
     expect(fountain).toContain('Footsteps echo.');
     expect(fountain).not.toContain('A door slams shut.');
   });

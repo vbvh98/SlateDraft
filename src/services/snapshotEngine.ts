@@ -4,7 +4,7 @@ import {
   ScriptBlock,
   TitlePageData,
 } from '../types/screenplay';
-import { exportToFountain } from './formatInterchange';
+import { invokeRustExportFountain } from './rustBridge';
 
 export interface DraftSnapshot {
   id: string;
@@ -205,11 +205,11 @@ function splitIntoSceneChunks(blocks: ScriptBlock[]): SceneChunk[] {
   return chunks;
 }
 
-export function exportChangedScenesFountain(
+export async function exportChangedScenesFountain(
   titlePage: TitlePageData,
   baseBlocks: ScriptBlock[],
   currentBlocks: ScriptBlock[]
-): string {
+): Promise<string> {
   const baseMap = indexBlocksWithSceneNumbers(baseBlocks);
   const currentMap = indexBlocksWithSceneNumbers(currentBlocks);
 
@@ -253,5 +253,5 @@ export function exportChangedScenesFountain(
     }
   }
 
-  return exportToFountain(titlePage, changedBlocks);
+  return invokeRustExportFountain(titlePage, changedBlocks);
 }

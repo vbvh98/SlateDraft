@@ -138,9 +138,9 @@ export const SnapshotsModal: React.FC<SnapshotsModalProps> = ({
     setSnapshotName('');
   };
 
-  const handleDownloadChangedFountain = () => {
+  const handleDownloadChangedFountain = async () => {
     if (!selectedSnapshot || totalChanges === 0) return;
-    const fountain = exportChangedScenesFountain(
+    const fountain = await exportChangedScenesFountain(
       titlePage,
       selectedSnapshot.blocks,
       currentBlocks

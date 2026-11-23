@@ -13,15 +13,12 @@ import {
   INITIAL_BLANK_AV_ROWS,
   INITIAL_BLANK_CHARACTERS,
 } from '../data/templates';
-import { isTauriDesktopRuntime } from './rustBridge';
+import { invokeTauri } from './rustBridge';
 import { DraftSnapshot } from './snapshotEngine';
 import { LANGUAGE_METADATA } from './transliterationEngine';
 
 export const PROJECT_SCHEMA_VERSION = 1 as const;
 export const PROJECT_FILE_EXTENSION = '.slatedraft';
-export const RECENT_PROJECTS_STORAGE_KEY = 'slatedraft-recent-projects-v1';
-export const BACKUP_SNAPSHOT_STORAGE_PREFIX = 'slatedraft-backup-v1:';
-const MAX_RECENT_PROJECTS = 10;
 
 const VALID_THEMES = new Set<StudioTheme>(['obsidian', 'sahitya', 'neel']);
 const VALID_REVISION_COLORS = new Set<RevisionColor>([
@@ -233,75 +230,16 @@ export function parseProjectFile(raw: string): SlateDraftProjectFile | null {
   };
 }
 
-function readLocalRecentProjects(): string[] {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return [];
-    const raw = window.localStorage.getItem(RECENT_PROJECTS_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).slice(0, MAX_RECENT_PROJECTS);
-  } catch {
-    return [];
-  }
-}
-
-function writeLocalRecentProjects(paths: string[]): string[] {
-  const deduped: string[] = [];
-  for (const p of paths) {
-    const trimmed = p.trim();
-    if (trimmed && !deduped.includes(trimmed)) {
-      deduped.push(trimmed);
-    }
-    if (deduped.length >= MAX_RECENT_PROJECTS) break;
-  }
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem(RECENT_PROJECTS_STORAGE_KEY, JSON.stringify(deduped));
-    }
-  } catch {
-    // Ignore storage quota or private-browsing errors
-  }
-  return deduped;
-}
-
-function triggerBrowserDownload(filename: string, content: string): void {
-  if (typeof document === 'undefined' || typeof URL === 'undefined') return;
-  const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 export async function getRecentProjects(): Promise<string[]> {
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      return await window.__TAURI_INTERNALS__.invoke<string[]>('get_recent_projects');
-    } catch {
-      // Fallback to browser localStorage
-    }
-  }
-  return readLocalRecentProjects();
+  return invokeTauri<string[]>('get_recent_projects');
 }
 
 export async function recordRecentProject(path: string): Promise<string[]> {
   const trimmed = path.trim();
   if (!trimmed) return getRecentProjects();
-
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      return await window.__TAURI_INTERNALS__.invoke<string[]>('record_recent_project', {
-        path: trimmed,
-      });
-    } catch {
-      // Fallback to browser localStorage
-    }
-  }
-  const existing = readLocalRecentProjects();
-  return writeLocalRecentProjects([trimmed, ...existing]);
+  return invokeTauri<string[]>('record_recent_project', {
+    path: trimmed,
+  });
 }
 
 export async function saveProjectFile(
@@ -312,33 +250,17 @@ export async function saveProjectFile(
     ? pathOrFilename
     : `${pathOrFilename}${PROJECT_FILE_EXTENSION}`;
 
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      const canonical = await window.__TAURI_INTERNALS__.invoke<string>('save_project_file', {
-        path: normalizedName,
-        content,
-      });
-      return { savedPath: canonical, mode: 'desktop' };
-    } catch {
-      // Fallback to browser download if native IPC fails
-    }
-  }
-
-  triggerBrowserDownload(normalizedName, content);
-  return { savedPath: normalizedName, mode: 'browser' };
+  const canonical = await invokeTauri<string>('save_project_file', {
+    path: normalizedName,
+    content,
+  });
+  return { savedPath: canonical, mode: 'desktop' };
 }
 
 export async function loadProjectFile(path: string): Promise<string | null> {
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      return await window.__TAURI_INTERNALS__.invoke<string>('load_project_file', {
-        path,
-      });
-    } catch {
-      return null;
-    }
-  }
-  return null;
+  return invokeTauri<string>('load_project_file', {
+    path,
+  });
 }
 
 export async function writeBackupSnapshot(
@@ -346,38 +268,13 @@ export async function writeBackupSnapshot(
   content: string
 ): Promise<string | null> {
   const slug = buildProjectSlug(projectSlug);
-
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      return await window.__TAURI_INTERNALS__.invoke<string>('write_backup_snapshot', {
-        projectSlug: slug,
-        content,
-      });
-    } catch {
-      // Fallback to localStorage backup
-    }
-  }
-
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const key = `${BACKUP_SNAPSHOT_STORAGE_PREFIX}${slug}`;
-      window.localStorage.setItem(key, content);
-      return key;
-    }
-  } catch {
-    // Ignore quota errors
-  }
-  return null;
+  return invokeTauri<string>('write_backup_snapshot', {
+    projectSlug: slug,
+    content,
+  });
 }
 
 export async function invokeNativeNewWindow(): Promise<boolean> {
-  if (isTauriDesktopRuntime() && window.__TAURI_INTERNALS__) {
-    try {
-      await window.__TAURI_INTERNALS__.invoke('open_new_window');
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  return false;
+  await invokeTauri('open_new_window');
+  return true;
 }

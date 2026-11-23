@@ -13,7 +13,6 @@ import {
   loadProjectFile,
   parseProjectFile,
   PROJECT_SCHEMA_VERSION,
-  RECENT_PROJECTS_STORAGE_KEY,
   recordRecentProject,
   saveProjectFile,
   serializeProjectFile,
@@ -290,23 +289,6 @@ describe('projectStorage — .slatedraft serialization & parsing', () => {
     expect(buildProjectSlug('   ')).toBe('untitled-screenplay');
   });
 
-  it('tracks recent projects in localStorage with deduplication and max-10 cap in browser fallback', async () => {
-    const localStorage = createMemoryStorage();
-    vi.stubGlobal('window', { localStorage });
-
-    for (let i = 1; i <= 12; i += 1) {
-      await recordRecentProject(`project-${i}.slatedraft`);
-    }
-    const list = await recordRecentProject('project-5.slatedraft');
-    expect(list).toHaveLength(10);
-    expect(list[0]).toBe('project-5.slatedraft');
-    expect(new Set(list).size).toBe(10);
-
-    const fetched = await getRecentProjects();
-    expect(fetched).toEqual(list);
-    expect(localStorage.getItem(RECENT_PROJECTS_STORAGE_KEY)).toBeTruthy();
-  });
-
   it('routes save/load/backup/recent calls through Tauri IPC when available', async () => {
     const invoke = vi.fn(async (cmd: string, args?: Record<string, unknown>) => {
       if (cmd === 'save_project_file') return `/Users/writer/${String(args?.path)}`;
@@ -391,9 +373,22 @@ describe('projectStorage — .slatedraft serialization & parsing', () => {
     expect(reparsed?.snapshots).toEqual(sampleSnapshots);
   });
 
-  it('invokes open_new_window in Tauri runtime and returns false in browser fallback', async () => {
+  it('throws in non-Tauri environments and invokes open_new_window in Tauri runtime', async () => {
     vi.stubGlobal('window', {});
-    expect(await invokeNativeNewWindow()).toBe(false);
+    await expect(invokeNativeNewWindow()).rejects.toThrow(
+      /Tauri desktop runtime/i
+    );
+    await expect(saveProjectFile('monsoon', '{}')).rejects.toThrow(
+      /Tauri desktop runtime/i
+    );
+
+    const failingInvoke = vi.fn(async () => {
+      throw new Error('disk full');
+    });
+    vi.stubGlobal('window', {
+      __TAURI_INTERNALS__: { invoke: failingInvoke },
+    });
+    await expect(getRecentProjects()).rejects.toThrow('disk full');
 
     const invoke = vi.fn(async (cmd: string) => {
       if (cmd === 'open_new_window') return undefined;
@@ -403,6 +398,6 @@ describe('projectStorage — .slatedraft serialization & parsing', () => {
       __TAURI_INTERNALS__: { invoke },
     });
     expect(await invokeNativeNewWindow()).toBe(true);
-    expect(invoke).toHaveBeenCalledWith('open_new_window');
+    expect(invoke).toHaveBeenCalledWith('open_new_window', undefined);
   });
 });

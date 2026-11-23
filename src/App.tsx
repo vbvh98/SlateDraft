@@ -9,6 +9,7 @@ import {
   ProductionState,
   ProductionTags,
   RevisionColor,
+  ScriptAnalyticsReport,
   ScriptBlock,
   ScriptTemplate,
   StudioTheme,
@@ -21,18 +22,17 @@ import {
   INITIAL_BLANK_BLOCKS,
   INITIAL_BLANK_CHARACTERS,
 } from './data/templates';
-import { analyzeScriptSync } from './services/analyticsEngine';
 import {
   extractFdxTitlePage,
   formatWhatsAppReadableText,
   moveSceneChunk,
   parseFdxXml,
-  parseSmartScriptText,
-  recalculateSceneNumbers,
 } from './services/formatInterchange';
 import {
+  invokeRustAnalytics,
   invokeRustExportFdx,
   invokeRustExportFountain,
+  invokeRustParseScript,
   invokeRustSceneLocks,
 } from './services/rustBridge';
 import {
@@ -501,10 +501,36 @@ export const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [toastMessage]);
 
-  const analytics = useMemo(
-    () => analyzeScriptSync(blocks, language),
-    [blocks, language]
-  );
+  const [analytics, setAnalytics] = useState<ScriptAnalyticsReport>({
+    totalBlocks: blocks.length,
+    totalScenes: 0,
+    totalWords: 0,
+    totalPages: 0,
+    totalEighths: 0,
+    formattedEighths: '0/8 pgs',
+    estimatedRuntimeMinutes: 0,
+    latinStandardMinutes: 0,
+    indicCalibrationFactor: 1,
+    dialoguePercentage: 0,
+    actionPercentage: 0,
+    songCount: 0,
+    characters: [],
+    locations: [],
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    invokeRustAnalytics(blocks, language)
+      .then((report) => {
+        if (!cancelled) setAnalytics(report);
+      })
+      .catch((err) => {
+        console.error('Rust analytics error:', err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [blocks, language]);
 
   const activeBlock = useMemo(
     () => blocks.find((b) => b.id === activeBlockId) ?? blocks[0] ?? null,
@@ -592,7 +618,7 @@ export const App: React.FC = () => {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const content = event.target?.result as string;
       if (!content) return;
 
@@ -615,7 +641,7 @@ export const App: React.FC = () => {
 
       const parsed = isFdx
         ? parseFdxXml(content, revisionColor)
-        : parseSmartScriptText(content, revisionColor);
+        : await invokeRustParseScript(content);
 
       if (parsed.length > 0) {
         const fdxTitleMeta = isFdx ? extractFdxTitlePage(content) : {};
@@ -624,7 +650,7 @@ export const App: React.FC = () => {
           title: (fdxTitleMeta.title || fileName).toUpperCase(),
           writtenBy: fdxTitleMeta.writtenBy ?? prev.writtenBy,
         }));
-        const nextBlocks = recalculateSceneNumbers(parsed, scenesLocked);
+        const nextBlocks = await invokeRustSceneLocks(parsed, scenesLocked);
         commitBlocks(nextBlocks, 'immediate');
         setActiveBlockId(nextBlocks[0].id);
         setActiveView('screenplay');
@@ -685,7 +711,7 @@ export const App: React.FC = () => {
     commitBlocks(next, 'debounced');
   };
 
-  const handleChangeBlockElement = (id: string, elementType: ElementType) => {
+  const handleChangeBlockElement = async (id: string, elementType: ElementType) => {
     const updated = blocksRef.current.map((b) =>
       b.id === id
         ? {
@@ -696,7 +722,7 @@ export const App: React.FC = () => {
           }
         : b
     );
-    commitBlocks(recalculateSceneNumbers(updated, scenesLocked), 'immediate');
+    commitBlocks(await invokeRustSceneLocks(updated, scenesLocked), 'immediate');
   };
 
   const handleInsertBlockAfter = (afterId: string, elementType: ElementType): string => {
@@ -719,13 +745,16 @@ export const App: React.FC = () => {
     } else {
       next.splice(idx + 1, 0, newBlock);
     }
-    commitBlocks(recalculateSceneNumbers(next, scenesLocked), 'immediate');
+    commitBlocks(next, 'immediate');
+    void invokeRustSceneLocks(next, scenesLocked).then((locked) => {
+      commitBlocks(locked, 'immediate');
+    });
 
     setActiveBlockId(newId);
     return newId;
   };
 
-  const handleDeleteBlock = (id: string) => {
+  const handleDeleteBlock = async (id: string) => {
     const prev = blocksRef.current;
     if (prev.length <= 1) return;
     const idx = prev.findIndex((b) => b.id === id);
@@ -733,7 +762,7 @@ export const App: React.FC = () => {
     const next = prev.filter((b) => b.id !== id);
     const focusIdx = Math.max(0, idx - 1);
     setActiveBlockId(next[focusIdx]?.id ?? null);
-    commitBlocks(recalculateSceneNumbers(next, scenesLocked), 'immediate');
+    commitBlocks(await invokeRustSceneLocks(next, scenesLocked), 'immediate');
   };
 
   const handleToggleDualDialogue = (id: string) => {
@@ -743,11 +772,11 @@ export const App: React.FC = () => {
     commitBlocks(next, 'immediate');
   };
 
-  const handleToggleOmitBlock = (id: string) => {
+  const handleToggleOmitBlock = async (id: string) => {
     const next = blocksRef.current.map((b) =>
       b.id === id ? { ...b, omitted: !b.omitted } : b
     );
-    commitBlocks(recalculateSceneNumbers(next, scenesLocked), 'immediate');
+    commitBlocks(await invokeRustSceneLocks(next, scenesLocked), 'immediate');
   };
 
   const handleToggleSceneLocks = async () => {
@@ -762,10 +791,10 @@ export const App: React.FC = () => {
     );
   };
 
-  const handleSmartPasteText = (rawText: string) => {
-    const parsed = parseSmartScriptText(rawText, revisionColor);
+  const handleSmartPasteText = async (rawText: string) => {
+    const parsed = await invokeRustParseScript(rawText);
     if (parsed.length === 0) return;
-    const next = recalculateSceneNumbers([...blocksRef.current, ...parsed], scenesLocked);
+    const next = await invokeRustSceneLocks([...blocksRef.current, ...parsed], scenesLocked);
     commitBlocks(next, 'immediate');
     setActiveBlockId(parsed[0].id);
     showToast(`Imported ${parsed.length} structured blocks`);
@@ -808,9 +837,9 @@ export const App: React.FC = () => {
     commitBlocks(next, 'immediate');
   };
 
-  const handleMoveScene = (sceneId: string, direction: 'up' | 'down') => {
+  const handleMoveScene = async (sceneId: string, direction: 'up' | 'down') => {
     const prev = blocksRef.current;
-    const reordered = moveSceneChunk(prev, sceneId, direction, scenesLocked);
+    const reordered = await moveSceneChunk(prev, sceneId, direction, scenesLocked);
     if (reordered === prev) return;
     commitBlocks(reordered, 'immediate');
   };
