@@ -46,12 +46,20 @@
         <nav class="site-nav" aria-label="Primary">
           <a class="nav-link" href="#product">Workspace</a>
           <a class="nav-link" href="#writers">Writers</a>
-          <a class="nav-link" href="#production">Production</a>
+          <a class="nav-link" href="#production">Production Teams</a>
           <a class="nav-link" href="#privacy">Privacy</a>
           <a class="nav-link" href="#download">Installers</a>
         </nav>
 
         <div class="header-actions">
+          <a
+            class="btn btn-secondary btn-sm"
+            href="https://github.com/vbvh98/SlateDraft"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
           <a class="btn btn-primary btn-sm" href="#download" id="nav-download-btn">
             Download v1.0.0
           </a>
@@ -79,9 +87,12 @@
         <div class="mobile-drawer-links">
           <a href="#product">Workspace</a>
           <a href="#writers">Writers</a>
-          <a href="#production">Production</a>
+          <a href="#production">Production Teams</a>
           <a href="#privacy">Privacy</a>
           <a href="#download">Installers</a>
+          <a href="https://github.com/vbvh98/SlateDraft" target="_blank" rel="noopener noreferrer">
+            GitHub Repository
+          </a>
         </div>
         <a class="btn btn-primary" href="#download" style="width: 100%">Download v1.0.0</a>
       </div>
@@ -92,24 +103,20 @@
       <section class="hero" id="top">
         <div class="wrap hero-layout">
           <div data-enter="1">
-            <p class="hero-eyebrow">
-              <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-              SlateDraft Studio v1.0.0 · Desktop Release
-            </p>
             <h1 class="hero-title">
               Screenwriting and pre-production software for cinema and OTT.
             </h1>
             <p class="hero-lead">
-              <strong>100% offline. Built in Rust.</strong> Write industry-standard 12pt Courier
-              scripts in English and 9 Indic languages, then run stripboards, Day-Out-of-Days
-              schedules, and daily call sheets from the same local file.
+              <strong>100% offline. Built in Rust.</strong> Author industry-standard 12pt Courier
+              scripts in English and 9 Indic scripts, then run 1st AD stripboards, Producer
+              Day-Out-of-Days matrices, DOP shot lists, and daily call sheets from one local file.
             </p>
 
             <div class="hero-actions">
               <a
                 class="btn btn-primary btn-lg"
                 id="hero-primary-cta"
-                href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
+                href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
                 download
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -123,13 +130,20 @@
                 </svg>
                 <span id="hero-primary-label">Download for macOS (Apple Silicon)</span>
               </a>
-              <a class="btn btn-secondary btn-lg" href="#download">All platforms</a>
+              <a
+                class="btn btn-secondary btn-lg"
+                href="https://github.com/vbvh98/SlateDraft/releases/tag/v1.0.0"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View v1.0.0 Release
+              </a>
             </div>
 
             <div class="hero-meta">
               <span class="hero-meta-item" id="hero-file-meta">SlateDraft_1.0.0_aarch64.dmg</span>
               <span class="hero-meta-item">.slatedraft · .fdx · .fountain</span>
-              <span class="hero-meta-item">Zero accounts · Zero telemetry</span>
+              <span class="hero-meta-item">MIT Licensed · Zero telemetry</span>
             </div>
           </div>
 
@@ -142,121 +156,144 @@
               <a
                 class="installer-row"
                 data-platform="mac-arm64"
-                href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
+                href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
                 download
               >
-                <span class="installer-row-info">
-                  <span class="installer-os">macOS (Apple Silicon)</span>
-                  <span class="installer-file">SlateDraft_1.0.0_aarch64.dmg · macOS 12+</span>
+                <span class="installer-row-surface">
+                  <span class="installer-row-info">
+                    <span class="installer-os">macOS (Apple Silicon)</span>
+                    <span class="installer-file">SlateDraft_1.0.0_aarch64.dmg · M1–M4</span>
+                  </span>
+                  <span class="installer-ext">.dmg</span>
                 </span>
-                <span class="installer-ext">.dmg</span>
               </a>
 
               <a
                 class="installer-row"
                 data-platform="mac-x64"
-                href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64.dmg"
+                href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_x64.dmg"
                 download
               >
-                <span class="installer-row-info">
-                  <span class="installer-os">macOS (Intel)</span>
-                  <span class="installer-file">SlateDraft_1.0.0_x64.dmg · macOS 12+</span>
+                <span class="installer-row-surface">
+                  <span class="installer-row-info">
+                    <span class="installer-os">macOS (Intel)</span>
+                    <span class="installer-file">SlateDraft_1.0.0_x64.dmg · macOS 12+</span>
+                  </span>
+                  <span class="installer-ext">.dmg</span>
                 </span>
-                <span class="installer-ext">.dmg</span>
               </a>
 
               <a
                 class="installer-row"
                 data-platform="windows"
-                href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64-setup.exe"
+                href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_x64-setup.exe"
                 download
               >
-                <span class="installer-row-info">
-                  <span class="installer-os">Windows (64-bit)</span>
-                  <span class="installer-file">SlateDraft_1.0.0_x64-setup.exe · Win 10/11</span>
+                <span class="installer-row-surface">
+                  <span class="installer-row-info">
+                    <span class="installer-os">Windows (64-bit)</span>
+                    <span class="installer-file">SlateDraft_1.0.0_x64-setup.exe · Win 10/11</span>
+                  </span>
+                  <span class="installer-ext">.exe</span>
                 </span>
-                <span class="installer-ext">.exe</span>
               </a>
 
               <a
                 class="installer-row"
                 data-platform="linux"
-                href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_amd64.AppImage"
+                href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_amd64.AppImage"
                 download
               >
-                <span class="installer-row-info">
-                  <span class="installer-os">Linux (x86_64)</span>
-                  <span class="installer-file">SlateDraft_1.0.0_amd64.AppImage · .deb / .rpm</span>
+                <span class="installer-row-surface">
+                  <span class="installer-row-info">
+                    <span class="installer-os">Linux (x86_64)</span>
+                    <span class="installer-file">SlateDraft_1.0.0_amd64.AppImage · .deb</span>
+                  </span>
+                  <span class="installer-ext">.AppImage</span>
                 </span>
-                <span class="installer-ext">.AppImage</span>
+              </a>
+            </div>
+            <div class="installer-footer">
+              <span>All builds signed via GitHub Actions</span>
+              <a
+                href="https://github.com/vbvh98/SlateDraft/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                All release assets →
               </a>
             </div>
           </aside>
         </div>
       </section>
 
-      <!-- LIVE PRODUCT SHOWCASE -->
+      <!-- FOCAL MOTION 1: LIVE PRODUCT WORKSPACE -->
       <section class="section" id="product">
         <div class="wrap">
           <div class="section-head">
             <div>
-              <h2 class="section-title">From locked script to floor call sheet.</h2>
+              <h2 class="section-title">From locked screenplay to floor call sheet.</h2>
             </div>
             <p class="section-desc">
-              Switch views below to inspect the live workspace layout. Every scene, character, and
-              prop tagged in the screenplay updates the stripboard, DOOD, and call sheet locally.
+              Switch views or press <span class="mono">1</span>–<span class="mono">4</span> to
+              inspect the live workspace. Every scene, character, and breakdown tag updates the
+              stripboard, Day-Out-of-Days, and call sheet automatically.
             </p>
           </div>
 
-          <div class="showcase-tabs" role="tablist" aria-label="SlateDraft Studio workspace views">
-            <button
-              type="button"
-              class="showcase-tab"
-              role="tab"
-              id="tab-editor"
-              aria-selected="true"
-              aria-controls="panel-editor"
-              data-panel="editor"
-            >
-              <span class="tab-key">01</span>
-              <span>Screenplay Editor</span>
-            </button>
-            <button
-              type="button"
-              class="showcase-tab"
-              role="tab"
-              id="tab-stripboard"
-              aria-selected="false"
-              aria-controls="panel-stripboard"
-              data-panel="stripboard"
-            >
-              <span class="tab-key">02</span>
-              <span>1st AD Stripboard</span>
-            </button>
-            <button
-              type="button"
-              class="showcase-tab"
-              role="tab"
-              id="tab-dood"
-              aria-selected="false"
-              aria-controls="panel-dood"
-              data-panel="dood"
-            >
-              <span class="tab-key">03</span>
-              <span>Producer DOOD</span>
-            </button>
-            <button
-              type="button"
-              class="showcase-tab"
-              role="tab"
-              id="tab-callsheet"
-              aria-selected="false"
-              aria-controls="panel-callsheet"
-              data-panel="callsheet"
-            >
-              <span class="tab-key">04</span>
-              <span>Daily Call Sheet</span>
-            </button>
+          <div class="showcase-bar">
+            <div class="showcase-tabs" role="tablist" aria-label="SlateDraft Studio workspace views">
+              <button
+                type="button"
+                class="showcase-tab"
+                role="tab"
+                id="tab-editor"
+                aria-selected="true"
+                aria-controls="panel-editor"
+                data-panel="editor"
+              >
+                <span>Screenplay Editor</span>
+                <span class="tab-shortcut">⌘1</span>
+              </button>
+              <button
+                type="button"
+                class="showcase-tab"
+                role="tab"
+                id="tab-stripboard"
+                aria-selected="false"
+                aria-controls="panel-stripboard"
+                data-panel="stripboard"
+              >
+                <span>1st AD Stripboard</span>
+                <span class="tab-shortcut">⌘2</span>
+              </button>
+              <button
+                type="button"
+                class="showcase-tab"
+                role="tab"
+                id="tab-dood"
+                aria-selected="false"
+                aria-controls="panel-dood"
+                data-panel="dood"
+              >
+                <span>Producer DOOD</span>
+                <span class="tab-shortcut">⌘3</span>
+              </button>
+              <button
+                type="button"
+                class="showcase-tab"
+                role="tab"
+                id="tab-callsheet"
+                aria-selected="false"
+                aria-controls="panel-callsheet"
+                data-panel="callsheet"
+              >
+                <span>Daily Call Sheet</span>
+                <span class="tab-shortcut">⌘4</span>
+              </button>
+            </div>
+
+            <span class="showcase-hint">Interactive preview · Keyboard 1–4 enabled</span>
           </div>
 
           <div class="app-frame">
@@ -322,7 +359,7 @@
                   <div class="editor-stats">
                     <div class="stat-mini">
                       <span class="stat-mini-val tabular">48m 15s</span>
-                      <span class="stat-mini-lbl">Est. Runtime</span>
+                      <span class="stat-mini-lbl">Calibrated Time</span>
                     </div>
                     <div class="stat-mini">
                       <span class="stat-mini-val tabular">12pt</span>
@@ -367,7 +404,7 @@
 
                 <aside class="editor-inspector" aria-label="Scene breakdown and transliteration">
                   <div class="inspector-group">
-                    <div class="pane-label"><span>Scene 14 Tags</span></div>
+                    <div class="pane-label"><span>Scene 14 Breakdown</span></div>
                     <div class="tag-list">
                       <span class="tag-chip tag-chip-cast">1. Kabir</span>
                       <span class="tag-chip tag-chip-cast">2. Meera</span>
@@ -380,7 +417,7 @@
                   <div class="inspector-group">
                     <div class="pane-label">
                       <span>Rust Transliteration</span>
-                      <span>HI</span>
+                      <span>0.18 ms</span>
                     </div>
                     <div class="translit-box">
                       <div class="translit-row">
@@ -401,7 +438,7 @@
               </div>
             </div>
 
-            <!-- PANEL 2: 1ST AD STRIPBOARD -->
+            <!-- PANEL 2: 1ST AD STRIPBOARD (Interactive FLIP Auto-Cluster) -->
             <div
               class="app-panel"
               id="panel-stripboard"
@@ -413,35 +450,45 @@
                 <div class="board-toolbar">
                   <div class="board-legend">
                     <span class="legend-item">
-                      <span class="legend-swatch" style="background: var(--strip-int-day)"></span>
+                      <span class="legend-swatch" style="background: var(--strip-int-day-ink)"></span>
                       INT. DAY
                     </span>
                     <span class="legend-item">
-                      <span class="legend-swatch" style="background: var(--strip-ext-day)"></span>
+                      <span class="legend-swatch" style="background: var(--strip-ext-day-ink)"></span>
                       EXT. DAY
                     </span>
                     <span class="legend-item">
-                      <span class="legend-swatch" style="background: var(--strip-int-night)"></span>
+                      <span class="legend-swatch" style="background: var(--strip-int-night-ink)"></span>
                       INT. NIGHT
                     </span>
                     <span class="legend-item">
-                      <span class="legend-swatch" style="background: var(--strip-ext-night)"></span>
+                      <span class="legend-swatch" style="background: var(--strip-ext-night-ink)"></span>
                       EXT. NIGHT
                     </span>
                   </div>
-                  <span class="mono" style="font-size: 12px; color: var(--ink-muted)">
-                    18 Shoot Days · 47 4/8 Total Pages
-                  </span>
+
+                  <div style="display: flex; align-items: center; gap: 12px">
+                    <span class="mono" id="stripboard-status-label" style="font-size: 12px; color: var(--ink-secondary)">
+                      Script Order · 2 Company Moves
+                    </span>
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm"
+                      id="btn-cluster-strips"
+                    >
+                      Auto-Cluster by Location
+                    </button>
+                  </div>
                 </div>
 
-                <div class="day-group">
+                <div class="day-group" id="stripboard-day1">
                   <div class="day-banner">
-                    <span>SHOOT DAY 01 — MON 14 OCT · MUMBAI CENTRAL UNIT</span>
-                    <span class="day-banner-meta tabular">3 SCENES · 3 5/8 PGS</span>
+                    <span id="day1-title">SHOOT DAY 01 — MON 14 OCT · MUMBAI CENTRAL UNIT</span>
+                    <span class="day-banner-meta tabular" id="day1-meta">3 SCENES · 3 5/8 PGS</span>
                   </div>
 
-                  <div class="strip-row strip-int-night">
-                    <span class="strip-sc">14</span>
+                  <div class="strip-row strip-int-night" data-strip-id="s14">
+                    <span class="strip-sc">#14</span>
                     <span class="strip-ie">INT · NIGHT</span>
                     <span class="strip-loc">IRANI CHAI STALL — Kabir &amp; Meera plan Kurla escape</span>
                     <span class="strip-cast">Cast: 1, 2, 6</span>
@@ -449,17 +496,17 @@
                     <span class="strip-pgs tabular">1 3/8</span>
                   </div>
 
-                  <div class="strip-row strip-ext-night">
-                    <span class="strip-sc">13</span>
-                    <span class="strip-ie">EXT · NIGHT</span>
-                    <span class="strip-loc">STATION OVERBRIDGE — Footbridge tailing sequence</span>
-                    <span class="strip-cast">Cast: 1, 2, 4</span>
-                    <span class="strip-unit">Steadicam</span>
-                    <span class="strip-pgs tabular">1 4/8</span>
+                  <div class="strip-row strip-ext-day" data-strip-id="s15">
+                    <span class="strip-sc">#15</span>
+                    <span class="strip-ie">EXT · DAY</span>
+                    <span class="strip-loc">BANDRA SEA LINK — Inspector Rao intercepts taxi</span>
+                    <span class="strip-cast">Cast: 2, 4</span>
+                    <span class="strip-unit">Process Trailer</span>
+                    <span class="strip-pgs tabular">2 1/8</span>
                   </div>
 
-                  <div class="strip-row strip-int-night">
-                    <span class="strip-sc">12</span>
+                  <div class="strip-row strip-int-night" data-strip-id="s12">
+                    <span class="strip-sc">#12</span>
                     <span class="strip-ie">INT · NIGHT</span>
                     <span class="strip-loc">DADAR PLATFORM — Ticket barrier confrontation</span>
                     <span class="strip-cast">Cast: 1, 9</span>
@@ -468,23 +515,23 @@
                   </div>
                 </div>
 
-                <div class="day-group">
+                <div class="day-group" id="stripboard-day2">
                   <div class="day-banner">
-                    <span>SHOOT DAY 02 — TUE 15 OCT · BANDRA / WORLI</span>
-                    <span class="day-banner-meta tabular">2 SCENES · 4 1/8 PGS</span>
+                    <span id="day2-title">SHOOT DAY 02 — TUE 15 OCT · BANDRA / WORLI</span>
+                    <span class="day-banner-meta tabular" id="day2-meta">2 SCENES · 3 4/8 PGS</span>
                   </div>
 
-                  <div class="strip-row strip-ext-day">
-                    <span class="strip-sc">15</span>
-                    <span class="strip-ie">EXT · DAY</span>
-                    <span class="strip-loc">BANDRA SEA LINK — Inspector Rao intercepts taxi</span>
-                    <span class="strip-cast">Cast: 2, 4</span>
-                    <span class="strip-unit">Process Trailer</span>
-                    <span class="strip-pgs tabular">2 1/8</span>
+                  <div class="strip-row strip-ext-night" data-strip-id="s13">
+                    <span class="strip-sc">#13</span>
+                    <span class="strip-ie">EXT · NIGHT</span>
+                    <span class="strip-loc">STATION OVERBRIDGE — Footbridge tailing sequence</span>
+                    <span class="strip-cast">Cast: 1, 2, 4</span>
+                    <span class="strip-unit">Steadicam</span>
+                    <span class="strip-pgs tabular">1 4/8</span>
                   </div>
 
-                  <div class="strip-row strip-int-day">
-                    <span class="strip-sc">18</span>
+                  <div class="strip-row strip-int-day" data-strip-id="s18">
+                    <span class="strip-sc">#18</span>
                     <span class="strip-ie">INT · DAY</span>
                     <span class="strip-loc">CRIME BRANCH OFFICE — Reel custody interrogation</span>
                     <span class="strip-cast">Cast: 1, 4, 5</span>
@@ -511,7 +558,7 @@
                   <div class="board-legend">
                     <span class="legend-item"><span class="dood-code dood-sw">SW</span> Start Work</span>
                     <span class="legend-item"><span class="dood-code dood-w">W</span> Work</span>
-                    <span class="legend-item"><span class="dood-code dood-h">H</span> Hold</span>
+                    <span class="legend-item"><span class="dood-code dood-h">H</span> Paid Hold</span>
                     <span class="legend-item"><span class="dood-code dood-wf">WF</span> Work Finish</span>
                   </div>
                 </div>
@@ -610,26 +657,24 @@
               <div class="callsheet-wrap">
                 <div class="callsheet-top">
                   <div class="cs-card">
-                    <div class="cs-kicker">Production · Day 01 of 18</div>
-                    <strong style="font-size: 15px">MONSOON EXPRESS (EP. 101)</strong>
+                    <h3 class="cs-heading">MONSOON EXPRESS (EP. 101) — Day 01 of 18</h3>
                     <div class="cs-detail">
-                      Dir: A. Menon · 1st AD: R. Verma · Basecamp: Ballard Estate Lot B
+                      Dir: A. Menon · 1st AD: R. Verma · DOP: S. Chatterjee<br />
+                      Basecamp: Ballard Estate Lot B
                     </div>
                   </div>
 
                   <div class="cs-card">
-                    <div class="cs-kicker">General Crew Call</div>
-                    <div class="cs-big-time tabular">17:30</div>
+                    <div class="cs-big-time tabular">17:30 Crew Call</div>
                     <div class="cs-detail">
                       Shooting Call: 18:45 · Meal Break: 23:30 · Est. Wrap: 05:30
                     </div>
                   </div>
 
                   <div class="cs-card">
-                    <div class="cs-kicker">Weather &amp; Nearest Hospital</div>
-                    <div class="cs-detail" style="margin-top: 0">
-                      27°C · Scattered Rain · Sunset 18:12<br />
-                      St. George Hospital, Fort (1.4 km)
+                    <h3 class="cs-heading">27°C · Scattered Rain · Sunset 18:12</h3>
+                    <div class="cs-detail">
+                      Hospital: St. George Hospital, Fort (1.4 km)
                     </div>
                   </div>
                 </div>
@@ -688,263 +733,389 @@
         </div>
       </section>
 
-      <!-- FOR WRITERS -->
+      <!-- FOCAL MOTION 2: FOR WRITERS — LIVE INDIC PHONETIC & TIMING WORKBENCH -->
       <section class="section section-surface" id="writers">
         <div class="wrap">
           <div class="section-head">
             <div>
-              <h2 class="section-title">Built for writers working in English and 9 Indic scripts.</h2>
+              <h2 class="section-title">Write in English and 9 Indic scripts on one page.</h2>
             </div>
             <p class="section-desc">
-              Designed for feature films, episodic writers' rooms, and regional cinema where
-              dialogue switches naturally between languages on the same page.
+              Select any regional script below or type Romanized dialogue to test the embedded Rust
+              phonetic engine and empirical regional page-timing calibration.
             </p>
           </div>
 
-          <div class="feature-grid-3">
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M4 4.5h12M4 8.5h8.5M4 12.5h12M4 16.5h6"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">12pt Courier &amp; Production Locking</h3>
-              <p class="feature-body">
-                Industry-standard margins, scene numbering, A/B omitted scenes, colored revision
-                drafts, and empirical page-eighth runtime timing calculated in real time.
-              </p>
-              <div class="feature-spec">Courier Prime · 54 lines/page · 8ths timing</div>
-            </article>
+          <div class="writers-workbench">
+            <div class="workbench-pane">
+              <div class="pane-label">
+                <span>1. Select Script or Type Phonetically</span>
+                <span>Rust IPC &lt; 0.5 ms</span>
+              </div>
 
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M5.5 2.75h6.25L15.5 6.5v10.75a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-13.5a1 1 0 0 1 1-1Z"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M11.5 2.75V6.5h4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">Native .fdx, .fountain &amp; .slatedraft</h3>
-              <p class="feature-body">
-                Open and export Final Draft XML (.fdx) and plain-text Fountain (.fountain) without
-                broken indentation, or save complete script-plus-production bundles in .slatedraft.
-              </p>
-              <div class="feature-spec">Lossless round-trip · OS file associations</div>
-            </article>
+              <div class="lang-pill-grid" role="group" aria-label="Select Indic script">
+                <button type="button" class="lang-btn" data-lang="hindi" aria-pressed="true">
+                  <span class="lang-native">हिन्दी</span>
+                  <span class="lang-name">Hindi</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="tamil" aria-pressed="false">
+                  <span class="lang-native">தமிழ்</span>
+                  <span class="lang-name">Tamil</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="telugu" aria-pressed="false">
+                  <span class="lang-native">తెలుగు</span>
+                  <span class="lang-name">Telugu</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="kannada" aria-pressed="false">
+                  <span class="lang-native">ಕನ್ನಡ</span>
+                  <span class="lang-name">Kannada</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="malayalam" aria-pressed="false">
+                  <span class="lang-native">മലയാളം</span>
+                  <span class="lang-name">Malayalam</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="marathi" aria-pressed="false">
+                  <span class="lang-native">मराठी</span>
+                  <span class="lang-name">Marathi</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="bengali" aria-pressed="false">
+                  <span class="lang-native">বাংলা</span>
+                  <span class="lang-name">Bengali</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="gujarati" aria-pressed="false">
+                  <span class="lang-native">ગુજરાતી</span>
+                  <span class="lang-name">Gujarati</span>
+                </button>
+                <button type="button" class="lang-btn" data-lang="punjabi" aria-pressed="false">
+                  <span class="lang-native">ਪੰਜਾਬੀ</span>
+                  <span class="lang-name">Punjabi</span>
+                </button>
+              </div>
 
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M3.5 5.5h8.5M7.75 3.5v2m2.25 0c-.5 3.2-2.4 5.9-5.5 7.75M5.5 8.5c1.1 1.6 2.5 3.1 4.5 4.25M11.5 16.5l2.75-7.5 2.75 7.5M12.35 14h3.8"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+              <div class="phonetic-try-bar">
+                <label class="pane-label" for="phonetic-demo-input">
+                  <span>Live Phonetic Input (Try: namaste, train, raat, kahani, cinema)</span>
+                  <span id="phonetic-latency">0.14 ms</span>
+                </label>
+                <div class="phonetic-input-row">
+                  <input
+                    id="phonetic-demo-input"
+                    class="phonetic-input"
+                    type="text"
+                    value="namaste"
+                    autocomplete="off"
+                    spellcheck="false"
                   />
-                </svg>
-              </span>
-              <h3 class="feature-title">Offline Indic Transliteration</h3>
-              <p class="feature-body">
-                Type phonetically on a standard QWERTY keyboard and convert directly inside the
-                editor with an embedded Rust transliteration engine — no browser extensions or API
-                keys required.
-              </p>
-              <div class="feature-spec">9 Indic scripts · Bilingual Hinglish &amp; English</div>
-            </article>
+                  <span class="phonetic-output-pill" id="phonetic-demo-output">नमस्ते</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="workbench-pane">
+              <div class="pane-label">
+                <span id="specimen-lang-label">Devanagari · Hindi Screenplay Specimen</span>
+                <span>12pt Courier Prime</span>
+              </div>
+
+              <div class="specimen-script-card" id="specimen-card">
+                <div>
+                  <p class="script-slug">
+                    <span class="script-num">Sc 24</span>
+                    <span id="specimen-slug">INT. METRO CONTROL ROOM - NIGHT</span>
+                    <span class="script-num">Sc 24</span>
+                  </p>
+                  <p class="script-char" id="specimen-char">KABIR</p>
+                  <p class="script-dial" id="specimen-dial">
+                    आखिरी ट्रेन छूट चुकी है। अगर हम अभी नहीं निकले, तो सुबह तक कोई रास्ता नहीं बचेगा।
+                  </p>
+                </div>
+
+                <div class="calibration-bar-wrap">
+                  <div class="pane-label">
+                    <span>Empirical Speaking-Rate Calibration</span>
+                    <span class="tabular" id="specimen-factor">0.88x · 52.8s per page</span>
+                  </div>
+                  <div class="calibration-track">
+                    <div class="calibration-fill" id="specimen-bar" style="width: 88%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="script-specimen" aria-label="Supported Indic scripts">
-            <div class="specimen-head">
-              <span class="pane-label">Built-in Offline Script Support (9 Indic Languages)</span>
-              <span class="mono" style="font-size: 11.5px; color: var(--ink-muted)">
-                Zero network calls · Local Rust phonetic engine
-              </span>
+          <div class="writer-specs-strip">
+            <div class="writer-spec-item">
+              <h3 class="writer-spec-title">Final Draft .fdx &amp; Fountain Round-Trip</h3>
+              <p class="writer-spec-body">
+                Import and export Final Draft 13 XML (.fdx) and plain-text .fountain with zero
+                broken indentation, preserving scene numbers, title pages, and dual dialogue.
+              </p>
             </div>
-            <div class="specimen-grid">
-              <div class="specimen-cell">
-                <span class="specimen-glyph">हिन्दी</span>
-                <span class="specimen-name">Hindi</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">தமிழ்</span>
-                <span class="specimen-name">Tamil</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">తెలుగు</span>
-                <span class="specimen-name">Telugu</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">ಕನ್ನಡ</span>
-                <span class="specimen-name">Kannada</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">മലയാളം</span>
-                <span class="specimen-name">Malayalam</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">मराठी</span>
-                <span class="specimen-name">Marathi</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">বাংলা</span>
-                <span class="specimen-name">Bengali</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">ગુજરાતી</span>
-                <span class="specimen-name">Gujarati</span>
-              </div>
-              <div class="specimen-cell">
-                <span class="specimen-glyph">ਪੰਜਾਬੀ</span>
-                <span class="specimen-name">Punjabi</span>
-              </div>
+            <div class="writer-spec-item">
+              <h3 class="writer-spec-title">A-Page Scene Locks &amp; Revision Diffs</h3>
+              <p class="writer-spec-body">
+                Lock scene numbers for production (generating 14A, 14B inserts), save named draft
+                snapshots, compare scene diffs, and export Changed Pages Only.
+              </p>
+            </div>
+            <div class="writer-spec-item">
+              <h3 class="writer-spec-title">Recipient-Watermarked PDF &amp; AV Split</h3>
+              <p class="writer-spec-body">
+                Print 12pt Courier shooting scripts with diagonal recipient watermarks, right-margin
+                revision asterisks (*), or switch to 2-column AV mode for promos and commercials.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- FOR PRODUCTION & CREW TEAMS -->
+      <!-- FOCAL MOTION 3: FOR PRODUCTION & CREW TEAMS — INTERACTIVE ROLE PIPELINE -->
       <section class="section" id="production">
         <div class="wrap">
           <div class="section-head">
             <div>
-              <h2 class="section-title">Production and crew schedules driven by your script.</h2>
+              <h2 class="section-title">Every department works from the same script file.</h2>
             </div>
             <p class="section-desc">
-              Stop re-typing scene numbers into disconnected spreadsheets. Tag breakdowns once and
-              generate department-ready reports for the whole unit.
+              Select a crew role below to see the exact schedule, matrix, or breakdown packet
+              SlateDraft generates from your screenplay.
             </p>
           </div>
 
-          <div class="feature-grid-2">
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <rect
-                    x="3"
-                    y="4"
-                    width="14"
-                    height="3.2"
-                    rx="1"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <rect
-                    x="3"
-                    y="8.4"
-                    width="14"
-                    height="3.2"
-                    rx="1"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <rect
-                    x="3"
-                    y="12.8"
-                    width="14"
-                    height="3.2"
-                    rx="1"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">1st AD Stripboard</h3>
-              <p class="feature-body">
-                Color-coded INT/EXT/DAY/NIGHT strips with shoot day banners, page-eighth counters,
-                cast IDs, and company move markers. Reorder days without losing scene continuity.
-              </p>
-              <div class="feature-spec">INT/EXT standard colors · Auto page-eighth totals</div>
-            </article>
+          <div class="crew-pipeline">
+            <div class="crew-role-list" role="tablist" aria-label="Production crew roles">
+              <button
+                type="button"
+                class="crew-role-btn"
+                role="tab"
+                id="role-tab-ad"
+                aria-selected="true"
+                aria-controls="role-panel-ad"
+                data-role="ad"
+              >
+                <span class="crew-role-name">
+                  <span>1st Assistant Director</span>
+                  <span class="mono">→</span>
+                </span>
+                <span class="crew-role-output">Color Stripboard &amp; Location Clustering</span>
+              </button>
 
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <rect
-                    x="3"
-                    y="4"
-                    width="14"
-                    height="12.5"
-                    rx="1.5"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <path
-                    d="M3 8.25h14M8 8.25v8.25M12.5 8.25v8.25"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">Producer Day-Out-of-Days (DOOD)</h3>
-              <p class="feature-body">
-                Automatic SW, W, H, WF, and SWF actor matrices computed straight from the active
-                stripboard, with total work and hold counts for budgeting and artist dates.
-              </p>
-              <div class="feature-spec">SW / W / H / WF / SWF · Live schedule sync</div>
-            </article>
+              <button
+                type="button"
+                class="crew-role-btn"
+                role="tab"
+                id="role-tab-producer"
+                aria-selected="false"
+                aria-controls="role-panel-producer"
+                data-role="producer"
+              >
+                <span class="crew-role-name">
+                  <span>Producer &amp; Line Producer</span>
+                  <span class="mono">→</span>
+                </span>
+                <span class="crew-role-output">Day-Out-of-Days &amp; Paid Hold Alerts</span>
+              </button>
 
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M3.5 6.5h9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1Z"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <path
-                    d="M14 9l3.5-2v6L14 11"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">Shot Lists &amp; HOD Breakdown Packets</h3>
-              <p class="feature-body">
-                Build camera shot lists with lens focal lengths and movement notes alongside
-                filtered department packets for Camera, Sound, Art, Wardrobe, Props, and Stunts.
-              </p>
-              <div class="feature-spec">Per-department breakdowns · Scene-linked shots</div>
-            </article>
+              <button
+                type="button"
+                class="crew-role-btn"
+                role="tab"
+                id="role-tab-dop"
+                aria-selected="false"
+                aria-controls="role-panel-dop"
+                data-role="dop"
+              >
+                <span class="crew-role-name">
+                  <span>Director &amp; Cinematographer</span>
+                  <span class="mono">→</span>
+                </span>
+                <span class="crew-role-output">Scene Shot Lists, Lenses &amp; Floor Progress</span>
+              </button>
 
-            <article class="feature-card">
-              <span class="feature-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M5 3.5h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                  <path
-                    d="M7 7.5h6M7 10.5h6M7 13.5h3.5"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </span>
-              <h3 class="feature-title">Daily Call Sheets</h3>
-              <p class="feature-body">
-                Compile general crew call, shooting call, sunrise/sunset, cast pickup and hair/MU
-                times, scene schedule, and nearest hospital details into a clean printable sheet.
-              </p>
-              <div class="feature-spec">Print / PDF ready · Zero cloud exposure</div>
-            </article>
+              <button
+                type="button"
+                class="crew-role-btn"
+                role="tab"
+                id="role-tab-hod"
+                aria-selected="false"
+                aria-controls="role-panel-hod"
+                data-role="hod"
+              >
+                <span class="crew-role-name">
+                  <span>Art, Wardrobe, VFX &amp; Stunts</span>
+                  <span class="mono">→</span>
+                </span>
+                <span class="crew-role-output">Auto-Detected Cues &amp; HOD CSV Packets</span>
+              </button>
+
+              <button
+                type="button"
+                class="crew-role-btn"
+                role="tab"
+                id="role-tab-upm"
+                aria-selected="false"
+                aria-controls="role-panel-upm"
+                data-role="upm"
+              >
+                <span class="crew-role-name">
+                  <span>Unit Production Manager</span>
+                  <span class="mono">→</span>
+                </span>
+                <span class="crew-role-output">Printable Call Sheets &amp; Crew Group Text</span>
+              </button>
+            </div>
+
+            <div class="crew-stage">
+              <!-- Role 1: 1st AD -->
+              <div
+                class="crew-stage-panel is-active"
+                id="role-panel-ad"
+                role="tabpanel"
+                aria-labelledby="role-tab-ad"
+              >
+                <div class="crew-stage-head">
+                  <h3 class="crew-stage-title">1st AD Stripboard &amp; Turnaround Optimizer</h3>
+                  <span class="crew-stage-badge">1/8th Page Precision · Drag &amp; Drop</span>
+                </div>
+                <p class="crew-stage-body">
+                  Every Scene Heading in the screenplay automatically generates a color-coded
+                  production strip with 1/8th page count, speaking cast IDs, and estimated shoot
+                  hours. Auto-Schedule clusters scenes by location and Day/Night to cut company
+                  moves and turnaround penalties.
+                </p>
+                <div class="crew-artifact-preview">
+                  <div class="artifact-row">
+                    <span>DAY 01 · IRANI CHAI STALL &amp; DADAR PLATFORM</span>
+                    <span style="color: var(--accent)">3 Scenes · 3 5/8 pgs · ~10.5h</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>Sc #14 · INT. NIGHT · Cast: Kabir, Meera, Irani</span>
+                    <span>1 3/8 pgs</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>Sc #12 · INT. NIGHT · Cast: Kabir, Ticket Collector</span>
+                    <span>6/8 pgs</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Role 2: Producer -->
+              <div
+                class="crew-stage-panel"
+                id="role-panel-producer"
+                role="tabpanel"
+                aria-labelledby="role-tab-producer"
+                hidden
+              >
+                <div class="crew-stage-head">
+                  <h3 class="crew-stage-title">Day-Out-of-Days (DOOD) &amp; Hold-Day Warnings</h3>
+                  <span class="crew-stage-badge">SW / W / H / WF / SWF · CSV Export</span>
+                </div>
+                <p class="crew-stage-body">
+                  As the 1st AD moves strips across shoot days, SlateDraft recalculates every
+                  actor's work window in real time and flags paid idle Hold (H) days so Line
+                  Producers can tighten principal cast dates before locking the schedule.
+                </p>
+                <div class="crew-artifact-preview">
+                  <div class="artifact-row">
+                    <span>KABIR DESHMUKH (5 Work Days · 1 Hold Day)</span>
+                    <span>D1: SW · D2: W · D3: W · D4: H · D5: W · D6: WF</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>DCP KULKARNI (3 Consecutive Work Days · 0 Hold Days)</span>
+                    <span style="color: #6ee7b7">Optimal Span: D2 SW → D4 WF</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Role 3: DOP -->
+              <div
+                class="crew-stage-panel"
+                id="role-panel-dop"
+                role="tabpanel"
+                aria-labelledby="role-tab-dop"
+                hidden
+              >
+                <div class="crew-stage-head">
+                  <h3 class="crew-stage-title">Director &amp; DOP Camera Coverage Planner</h3>
+                  <span class="crew-stage-badge">Shot Size · Movement · Focal Length</span>
+                </div>
+                <p class="crew-stage-body">
+                  Break each scene into camera setups (`14A`, `14B`, `14C`) with shot size, camera
+                  movement, lens focal length, lighting/grip notes, and setup duration. Check off
+                  completed setups on set with a live coverage progress bar.
+                </p>
+                <div class="crew-artifact-preview">
+                  <div class="artifact-row">
+                    <span>Setup 14A · WIDE · DOLLY · Anamorphic 40mm</span>
+                    <span style="color: #6ee7b7">✓ SHOT (25m setup)</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>Setup 14B · OTS · STATIC · 85mm · Sodium rain backlight</span>
+                    <span style="color: var(--accent)">PENDING (20m setup)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Role 4: HODs -->
+              <div
+                class="crew-stage-panel"
+                id="role-panel-hod"
+                role="tabpanel"
+                aria-labelledby="role-tab-hod"
+                hidden
+              >
+                <div class="crew-stage-head">
+                  <h3 class="crew-stage-title">Department Breakdown &amp; Filtered HOD Packets</h3>
+                  <span class="crew-stage-badge">7 Departments · Script Cue Auto-Detect</span>
+                </div>
+                <p class="crew-stage-body">
+                  Scan scene action text to auto-detect props, wardrobe multiples, VFX, stunts,
+                  picture vehicles, junior artists, and music cues. Export isolated CSV packets per
+                  department showing exact scene numbers and scheduled shoot days.
+                </p>
+                <div class="crew-artifact-preview">
+                  <div class="artifact-row">
+                    <span>WARDROBE PACKET — Distressed / Wet Trenchcoat (Multiples)</span>
+                    <span>Scenes #1, #13, #14 · Shoot Day 01</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>PROPS PACKET — Brass Kettle, Damp Platform Ticket, Reel Case</span>
+                    <span>Scenes #14, #18 · Shoot Days 01, 02</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Role 5: UPM -->
+              <div
+                class="crew-stage-panel"
+                id="role-panel-upm"
+                role="tabpanel"
+                aria-labelledby="role-tab-upm"
+                hidden
+              >
+                <div class="crew-stage-head">
+                  <h3 class="crew-stage-title">Daily Call Sheet &amp; Crew Group Distribution</h3>
+                  <span class="crew-stage-badge">Print PDF · 1-Click WhatsApp Summary</span>
+                </div>
+                <p class="crew-stage-body">
+                  Select any Shoot Day to generate a production-ready Call Sheet pre-filled with
+                  general crew call, key crew contacts, hospital address, scheduled scenes, cast
+                  H/M/W times, and on-set department alerts. Print to PDF or copy formatted plain
+                  text for unit WhatsApp groups.
+                </p>
+                <div class="crew-artifact-preview">
+                  <div class="artifact-row">
+                    <span>CALL SHEET — DAY 01 · General Crew Call 17:30</span>
+                    <span>Ballard Estate Lot B · St. George Hospital (1.4 km)</span>
+                  </div>
+                  <div class="artifact-row">
+                    <span>On-Set Alerts: Rain Tower (SFX), 40 Commuters (Extras), Brass Kettle</span>
+                    <span style="color: var(--accent)">Ready for Print / WhatsApp</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -955,7 +1126,7 @@
           <div>
             <h2 class="section-title">Local-first privacy: your scripts never leave your machine.</h2>
             <p class="section-desc" style="margin-top: 14px">
-              Production houses and writers' rooms work under strict NDAs. SlateDraft Studio runs
+              Production houses and writers' rooms operate under strict NDAs. SlateDraft Studio runs
               entirely on your local filesystem with zero cloud sync, zero user accounts, and zero
               subscriptions.
             </p>
@@ -975,7 +1146,7 @@
                 </span>
                 <span>
                   <strong>Zero cloud uploads.</strong> Every .slatedraft, .fdx, and .fountain file
-                  is read and written directly to your disk.
+                  is read and written atomically to your local disk with automatic rolling backups.
                 </span>
               </li>
               <li class="privacy-point">
@@ -992,7 +1163,7 @@
                 </span>
                 <span>
                   <strong>Zero telemetry or accounts.</strong> No login wall, no analytics beacons,
-                  no third-party tracking SDKs, and no monthly seat fees.
+                  no third-party tracking SDKs, and no recurring seat fees.
                 </span>
               </li>
               <li class="privacy-point">
@@ -1010,7 +1181,7 @@
                 <span>
                   <strong>Strict desktop CSP.</strong> The Tauri v2 window enforces
                   <code class="mono">default-src 'self'</code> to block remote scripts and
-                  unauthorized outbound requests.
+                  unauthorized outbound connections.
                 </span>
               </li>
             </ul>
@@ -1035,15 +1206,15 @@
             </div>
             <div class="spec-row">
               <span class="spec-key">Local Recovery</span>
-              <span class="spec-val">Rolling OS backups (slatedraft-backups)</span>
+              <span class="spec-val">10 rolling snapshots per project</span>
             </div>
             <div class="spec-row">
               <span class="spec-key">File Formats</span>
               <span class="spec-val">.slatedraft (JSON), .fdx (XML), .fountain</span>
             </div>
             <div class="spec-row">
-              <span class="spec-key">License &amp; Pricing</span>
-              <span class="spec-val">No subscription · Local ownership</span>
+              <span class="spec-key">License</span>
+              <span class="spec-val">MIT Open-Source · Free Forever</span>
             </div>
           </div>
         </div>
@@ -1057,8 +1228,8 @@
               <h2 class="section-title">Download SlateDraft Studio v1.0.0.</h2>
             </div>
             <p class="section-desc">
-              Native desktop bundles compiled for Apple Silicon, Intel Mac, Windows 64-bit, and
-              Linux x86_64.
+              Native desktop installers compiled for Apple Silicon, Intel Mac, Windows 64-bit, and
+              Linux x86_64 via GitHub Releases.
             </p>
           </div>
 
@@ -1069,13 +1240,13 @@
                 <span class="dl-badge" data-dl-badge="mac">macOS 12.0+</span>
               </div>
               <p class="dl-req">
-                Separate native builds for Apple Silicon (M1–M4) and Intel Macs.
+                Native builds for Apple Silicon (M1–M4) and Intel Macs with CoreText Indic shaping.
               </p>
               <div class="dl-links">
                 <a
                   class="dl-link"
                   data-dl-target="mac-arm64"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg"
                   download
                 >
                   <span>Apple Silicon (arm64)</span>
@@ -1084,7 +1255,7 @@
                 <a
                   class="dl-link"
                   data-dl-target="mac-x64"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64.dmg"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_x64.dmg"
                   download
                 >
                   <span>Intel (x86_64)</span>
@@ -1099,13 +1270,13 @@
                 <span class="dl-badge" data-dl-badge="windows">Windows 10 / 11</span>
               </div>
               <p class="dl-req">
-                64-bit installers with built-in .slatedraft, .fdx, and .fountain associations.
+                64-bit installers with built-in .slatedraft, .fdx, and .fountain file associations.
               </p>
               <div class="dl-links">
                 <a
                   class="dl-link"
                   data-dl-target="windows"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64-setup.exe"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_x64-setup.exe"
                   download
                 >
                   <span>Windows Setup (NSIS)</span>
@@ -1113,7 +1284,7 @@
                 </a>
                 <a
                   class="dl-link"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64_en-US.msi"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_x64_en-US.msi"
                   download
                 >
                   <span>Windows Installer (MSI)</span>
@@ -1128,13 +1299,13 @@
                 <span class="dl-badge" data-dl-badge="linux">x86_64 · WebKitGTK 4.1</span>
               </div>
               <p class="dl-req">
-                Portable AppImage plus native Debian/Ubuntu and Fedora/RHEL packages.
+                Portable AppImage plus native Debian and Ubuntu packages.
               </p>
               <div class="dl-links">
                 <a
                   class="dl-link"
                   data-dl-target="linux"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_amd64.AppImage"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/SlateDraft_1.0.0_amd64.AppImage"
                   download
                 >
                   <span>Portable AppImage</span>
@@ -1142,7 +1313,7 @@
                 </a>
                 <a
                   class="dl-link"
-                  href="https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/slatedraft_1.0.0_amd64.deb"
+                  href="https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/slatedraft_1.0.0_amd64.deb"
                   download
                 >
                   <span>Debian / Ubuntu (.deb)</span>
@@ -1163,45 +1334,74 @@
           <span>100% offline desktop suite · Built in Rust</span>
         </div>
 
-        <nav class="footer-links" aria-label="Legal">
-          <a href="../LICENSE">License</a>
-          <a href="../PRIVACY.md">Privacy Policy</a>
-          <a href="../TERMS.md">Terms of Use</a>
+        <nav class="footer-links" aria-label="Legal and source">
+          <a href="https://github.com/vbvh98/SlateDraft" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a
+            href="https://github.com/vbvh98/SlateDraft/releases/tag/v1.0.0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Releases
+          </a>
+          <a
+            href="https://github.com/vbvh98/SlateDraft/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            MIT License
+          </a>
+          <a
+            href="https://github.com/vbvh98/SlateDraft/blob/main/PRIVACY.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="https://github.com/vbvh98/SlateDraft/blob/main/TERMS.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Terms of Use
+          </a>
         </nav>
       </div>
     </footer>
 
     <script>
       (function () {
-        // 1. OS-aware download CTA detection
+        // 1. OS-aware download CTA detection pointing to live vbvh98/SlateDraft GitHub Releases
+        var RELEASE_BASE = 'https://github.com/vbvh98/SlateDraft/releases/download/v1.0.0/';
         var platforms = {
           'mac-arm64': {
             card: 'mac',
             label: 'Download for macOS (Apple Silicon)',
             badge: 'Detected · macOS Apple Silicon',
             file: 'SlateDraft_1.0.0_aarch64.dmg',
-            url: 'https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_aarch64.dmg',
+            url: RELEASE_BASE + 'SlateDraft_1.0.0_aarch64.dmg',
           },
           'mac-x64': {
             card: 'mac',
             label: 'Download for macOS (Intel)',
             badge: 'Detected · macOS Intel',
             file: 'SlateDraft_1.0.0_x64.dmg',
-            url: 'https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64.dmg',
+            url: RELEASE_BASE + 'SlateDraft_1.0.0_x64.dmg',
           },
           windows: {
             card: 'windows',
             label: 'Download for Windows (64-bit)',
             badge: 'Detected · Windows 64-bit',
             file: 'SlateDraft_1.0.0_x64-setup.exe',
-            url: 'https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_x64-setup.exe',
+            url: RELEASE_BASE + 'SlateDraft_1.0.0_x64-setup.exe',
           },
           linux: {
             card: 'linux',
             label: 'Download for Linux (AppImage)',
             badge: 'Detected · Linux x86_64',
             file: 'SlateDraft_1.0.0_amd64.AppImage',
-            url: 'https://github.com/slatedraft/slatedraft-studio/releases/download/v1.0.0/SlateDraft_1.0.0_amd64.AppImage',
+            url: RELEASE_BASE + 'SlateDraft_1.0.0_amd64.AppImage',
           },
         };
 
@@ -1216,7 +1416,6 @@
             return 'linux';
           }
           if (/mac/i.test(ua) || /mac/i.test(platform)) {
-            // Heuristic for Intel vs Apple Silicon via WebGL renderer when available
             try {
               var canvas = document.createElement('canvas');
               var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -1229,9 +1428,7 @@
                   }
                 }
               }
-            } catch (_) {
-              // Default to Apple Silicon on modern macOS
-            }
+            } catch (_) {}
             return 'mac-arm64';
           }
           return 'mac-arm64';
@@ -1269,11 +1466,12 @@
 
         applyPlatform(detectPlatform());
 
-        // 2. Interactive Workspace Showcase Tabs (click + keyboard arrows)
+        // 2. Interactive Workspace Showcase Tabs (click + keyboard 1-4 + arrows)
         var tabs = Array.prototype.slice.call(document.querySelectorAll('.showcase-tab'));
         var panels = Array.prototype.slice.call(document.querySelectorAll('.app-panel'));
 
         function activateTab(tab) {
+          if (!tab) return;
           var targetName = tab.getAttribute('data-panel');
           tabs.forEach(function (t) {
             var active = t === tab;
@@ -1294,14 +1492,337 @@
           tab.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
               e.preventDefault();
-              var next = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
+              var next =
+                e.key === 'ArrowRight'
+                  ? (idx + 1) % tabs.length
+                  : (idx - 1 + tabs.length) % tabs.length;
               tabs[next].focus();
               activateTab(tabs[next]);
             }
           });
         });
 
-        // 3. Mobile menu toggle
+        window.addEventListener('keydown', function (e) {
+          var tag = (e.target && e.target.tagName) || '';
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+          if (e.key >= '1' && e.key <= '4') {
+            var idx = parseInt(e.key, 10) - 1;
+            if (tabs[idx]) activateTab(tabs[idx]);
+          }
+        });
+
+        // 3. Interactive FLIP Stripboard Auto-Cluster Demo
+        var clusterBtn = document.getElementById('btn-cluster-strips');
+        var day1 = document.getElementById('stripboard-day1');
+        var day2 = document.getElementById('stripboard-day2');
+        var statusLabel = document.getElementById('stripboard-status-label');
+        var day1Meta = document.getElementById('day1-meta');
+        var day2Meta = document.getElementById('day2-meta');
+        var isClustered = false;
+
+        if (clusterBtn && day1 && day2) {
+          clusterBtn.addEventListener('click', function () {
+            var s15 = document.querySelector('[data-strip-id="s15"]');
+            var s13 = document.querySelector('[data-strip-id="s13"]');
+            if (!s15 || !s13) return;
+
+            var allStrips = Array.prototype.slice.call(document.querySelectorAll('.strip-row'));
+            var firstRects = new Map();
+            allStrips.forEach(function (el) {
+              firstRects.set(el, el.getBoundingClientRect());
+            });
+
+            isClustered = !isClustered;
+            if (isClustered) {
+              // Cluster all NIGHT station scenes in Day 1, all DAY scenes in Day 2
+              day1.appendChild(s13);
+              day2.insertBefore(s15, day2.children[1]);
+              clusterBtn.textContent = 'Reset to Script Order';
+              if (statusLabel)
+                statusLabel.textContent = 'Clustered by Location & Night/Day · 0 Company Moves';
+              if (day1Meta) day1Meta.textContent = '3 NIGHT SCENES · 3 5/8 PGS';
+              if (day2Meta) day2Meta.textContent = '2 DAY SCENES · 4 1/8 PGS';
+            } else {
+              day1.insertBefore(s15, day1.children[2]);
+              day2.insertBefore(s13, day2.children[1]);
+              clusterBtn.textContent = 'Auto-Cluster by Location';
+              if (statusLabel) statusLabel.textContent = 'Script Order · 2 Company Moves';
+              if (day1Meta) day1Meta.textContent = '3 SCENES · 3 5/8 PGS';
+              if (day2Meta) day2Meta.textContent = '2 SCENES · 3 4/8 PGS';
+            }
+
+            allStrips.forEach(function (el) {
+              var first = firstRects.get(el);
+              var last = el.getBoundingClientRect();
+              var dy = first.top - last.top;
+              if (Math.abs(dy) > 1) {
+                el.style.transition = 'none';
+                el.style.transform = 'translateY(' + dy + 'px)';
+                requestAnimationFrame(function () {
+                  el.style.transition = 'transform 280ms cubic-bezier(0.16, 1, 0.3, 1)';
+                  el.style.transform = '';
+                });
+              }
+            });
+          });
+        }
+
+        // 4. Interactive 9-Language Indic Phonetic & Timing Workbench
+        var indicSpecs = {
+          hindi: {
+            label: 'Devanagari · Hindi Screenplay Specimen',
+            slug: 'INT. METRO CONTROL ROOM - NIGHT',
+            char: 'KABIR',
+            dial: 'आखिरी ट्रेन छूट चुकी है। अगर हम अभी नहीं निकले, तो सुबह तक कोई रास्ता नहीं बचेगा।',
+            factor: '0.88x · 52.8s per page',
+            pct: 88,
+            sampleIn: 'namaste',
+            lexicon: {
+              namaste: 'नमस्ते',
+              train: 'ट्रेन',
+              station: 'स्टेशन',
+              raat: 'रात',
+              aaj: 'आज',
+              kahani: 'कहानी',
+              cinema: 'सिनेमा',
+              mumbai: 'मुंबई',
+            },
+          },
+          tamil: {
+            label: 'Tamil Script · Kollywood Screenplay Specimen',
+            slug: 'INT. CHENNAI EGMORE PLATFORM - NIGHT',
+            char: 'KARTHIK',
+            dial: 'வணக்கம். கடைசி ரயில் புறப்பட்டுவிட்டது. நாம் இப்போதே கிளம்பினால் தான் விடியலுக்குள் சேர முடியும்.',
+            factor: '0.82x · 49.2s per page',
+            pct: 82,
+            sampleIn: 'vanakkam',
+            lexicon: {
+              vanakkam: 'வணக்கம்',
+              namaste: 'வணக்கம்',
+              train: 'ரயில்',
+              raat: 'இரவு',
+              kahani: 'கதை',
+              cinema: 'சினிமா',
+              chennai: 'சென்னை',
+            },
+          },
+          telugu: {
+            label: 'Telugu Script · Tollywood Screenplay Specimen',
+            slug: 'EXT. CHARMINAR CHOWK - NIGHT',
+            char: 'ARJUN',
+            dial: 'నమస్కారం. చివరి రైలు వెళ్ళిపోయింది. మనం ఇప్పుడే బయలుదేరితేనే తెల్లవారేలోపు చేరుకుంటాం.',
+            factor: '0.84x · 50.4s per page',
+            pct: 84,
+            sampleIn: 'namaskaram',
+            lexicon: {
+              namaskaram: 'నమస్కారం',
+              namaste: 'నమస్కారం',
+              train: 'రైలు',
+              kahani: 'కథ',
+              katha: 'కథ',
+              cinema: 'సినిమా',
+            },
+          },
+          kannada: {
+            label: 'Kannada Script · Sandalwood Screenplay Specimen',
+            slug: 'INT. BENGALURU METRO CABIN - NIGHT',
+            char: 'SURYA',
+            dial: 'ನಮಸ್ಕಾರ. ಕೊನೆಯ ರೈಲು ಹೊರಟುಹೋಗಿದೆ. ನಾವು ಈಗಲೇ ಹೊರಟರೆ ಮಾತ್ರ ಬೆಳಿಗ್ಗೆಯೊಳಗೆ ತಲುಪಲು ಸಾಧ್ಯ.',
+            factor: '0.85x · 51.0s per page',
+            pct: 85,
+            sampleIn: 'namaskara',
+            lexicon: {
+              namaskara: 'ನಮಸ್ಕಾರ',
+              namaste: 'ನಮಸ್ಕಾರ',
+              train: 'ರೈಲು',
+              kahani: 'ಕಥೆ',
+              cinema: 'ಸಿನಿಮಾ',
+            },
+          },
+          malayalam: {
+            label: 'Malayalam Script · Mollywood Screenplay Specimen',
+            slug: 'EXT. FORT KOCHI FERRY JETTY - NIGHT',
+            char: 'FAHAD',
+            dial: 'നമസ്കാരം. അവസാന ട്രെയിൻ പോയിക്കഴിഞ്ഞു. ഇപ്പോൾ ഇറങ്ങിയാൽ മാത്രമേ പുലർച്ചെ മുമ്പ് എത്താൻ കഴിയൂ.',
+            factor: '0.80x · 48.0s per page',
+            pct: 80,
+            sampleIn: 'namaskaram',
+            lexicon: {
+              namaskaram: 'നമസ്കാരം',
+              namaste: 'നമസ്കാരം',
+              train: 'ട്രെയിൻ',
+              kahani: 'കഥ',
+              cinema: 'സിനിമ',
+            },
+          },
+          marathi: {
+            label: 'Balbodh Devanagari · Marathi Screenplay Specimen',
+            slug: 'INT. DADAR NATYA MANDIR - NIGHT',
+            char: 'MALHAR',
+            dial: 'नमस्कार. शेवटची लोकल सुटली आहे. आपण आत्ताच निघालो तरच पहाटेपर्यंत पोहोचू शकू.',
+            factor: '0.87x · 52.2s per page',
+            pct: 87,
+            sampleIn: 'namaskar',
+            lexicon: {
+              namaskar: 'नमस्कार',
+              namaste: 'नमस्कार',
+              train: 'लोकल ट्रेन',
+              raat: 'रात्र',
+              kahani: 'कथा',
+              cinema: 'चित्रपट',
+            },
+          },
+          bengali: {
+            label: 'Eastern Nagari · Bengali Screenplay Specimen',
+            slug: 'INT. HOWRAH JUNCTION CABIN - NIGHT',
+            char: 'SOUMITRA',
+            dial: 'নমস্কার। শেষ ট্রেন ছেড়ে গেছে। আমরা এখনই না বেরোলে ভোরের আগে পৌঁছাতে পারব না।',
+            factor: '0.89x · 53.4s per page',
+            pct: 89,
+            sampleIn: 'nomoshkar',
+            lexicon: {
+              nomoshkar: 'নমস্কার',
+              namaste: 'নমস্কার',
+              train: 'ট্রেন',
+              raat: 'রাত',
+              kahani: 'গল্প',
+              cinema: 'সিনেমা',
+            },
+          },
+          gujarati: {
+            label: 'Gujarati Script · Screenplay Specimen',
+            slug: 'EXT. SABARMATI RIVERFRONT - NIGHT',
+            char: 'DEV',
+            dial: 'નમસ્તે. છેલ્લી ટ્રેન ઉપડી ગઈ છે. જો આપણે અત્યારે નહીં નીકળીએ તો સવાર સુધી પહોંચી શકાશે નહીં.',
+            factor: '0.90x · 54.0s per page',
+            pct: 90,
+            sampleIn: 'namaste',
+            lexicon: {
+              namaste: 'નમસ્તે',
+              train: 'ટ્રેન',
+              raat: 'રાત',
+              kahani: 'વાર્તા',
+              cinema: 'સિનેમા',
+            },
+          },
+          punjabi: {
+            label: 'Gurmukhi · Punjabi Screenplay Specimen',
+            slug: 'EXT. AMRITSAR CANTONMENT - NIGHT',
+            char: 'KABIR',
+            dial: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ। ਆਖਰੀ ਟ੍ਰੇਨ ਛੁੱਟ ਚੁੱਕੀ ਹੈ। ਜੇ ਅਸੀਂ ਹੁਣੇ ਨਾ ਨਿਕਲੇ ਤਾਂ ਸਵੇਰ ਤੱਕ ਕੋਈ ਰਸਤਾ ਨਹੀਂ ਬਚੇਗਾ।',
+            factor: '0.91x · 54.6s per page',
+            pct: 91,
+            sampleIn: 'sat sri akal',
+            lexicon: {
+              'sat sri akal': 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ',
+              namaste: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ',
+              train: 'ਟ੍ਰੇਨ',
+              raat: 'ਰਾਤ',
+              kahani: 'ਕਹਾਣੀ',
+              cinema: 'ਸਿਨੇਮਾ',
+            },
+          },
+        };
+
+        var currentLang = 'hindi';
+        var langBtns = Array.prototype.slice.call(document.querySelectorAll('.lang-btn'));
+        var phoneticInput = document.getElementById('phonetic-demo-input');
+        var phoneticOutput = document.getElementById('phonetic-demo-output');
+        var specimenCard = document.getElementById('specimen-card');
+        var specimenLabel = document.getElementById('specimen-lang-label');
+        var specimenSlug = document.getElementById('specimen-slug');
+        var specimenChar = document.getElementById('specimen-char');
+        var specimenDial = document.getElementById('specimen-dial');
+        var specimenFactor = document.getElementById('specimen-factor');
+        var specimenBar = document.getElementById('specimen-bar');
+
+        function updatePhoneticOutput() {
+          if (!phoneticInput || !phoneticOutput) return;
+          var spec = indicSpecs[currentLang] || indicSpecs.hindi;
+          var raw = (phoneticInput.value || '').trim().toLowerCase();
+          if (!raw) {
+            phoneticOutput.textContent = '—';
+            return;
+          }
+          if (spec.lexicon[raw]) {
+            phoneticOutput.textContent = spec.lexicon[raw];
+            return;
+          }
+          var words = raw.split(/\s+/);
+          var mapped = words
+            .map(function (w) {
+              return spec.lexicon[w] || w;
+            })
+            .join(' ');
+          phoneticOutput.textContent =
+            mapped !== raw ? mapped : spec.lexicon[spec.sampleIn] + ' (' + raw + ')';
+        }
+
+        langBtns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var lang = btn.getAttribute('data-lang');
+            if (!lang || !indicSpecs[lang]) return;
+            currentLang = lang;
+            var spec = indicSpecs[lang];
+
+            langBtns.forEach(function (b) {
+              b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+            });
+
+            if (specimenCard) specimenCard.classList.add('is-switching');
+            setTimeout(function () {
+              if (specimenLabel) specimenLabel.textContent = spec.label;
+              if (specimenSlug) specimenSlug.textContent = spec.slug;
+              if (specimenChar) specimenChar.textContent = spec.char;
+              if (specimenDial) specimenDial.textContent = spec.dial;
+              if (specimenFactor) specimenFactor.textContent = spec.factor;
+              if (specimenBar) specimenBar.style.width = spec.pct + '%';
+              if (phoneticInput) phoneticInput.value = spec.sampleIn;
+              updatePhoneticOutput();
+              if (specimenCard) specimenCard.classList.remove('is-switching');
+            }, 130);
+          });
+        });
+
+        if (phoneticInput) {
+          phoneticInput.addEventListener('input', updatePhoneticOutput);
+        }
+
+        // 5. Interactive Production Crew Role Pipeline Tabs
+        var roleBtns = Array.prototype.slice.call(document.querySelectorAll('.crew-role-btn'));
+        var rolePanels = Array.prototype.slice.call(document.querySelectorAll('.crew-stage-panel'));
+
+        function activateRole(btn) {
+          var role = btn.getAttribute('data-role');
+          roleBtns.forEach(function (b) {
+            var active = b === btn;
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          rolePanels.forEach(function (panel) {
+            var active = panel.id === 'role-panel-' + role;
+            panel.classList.toggle('is-active', active);
+            panel.hidden = !active;
+          });
+        }
+
+        roleBtns.forEach(function (btn, idx) {
+          btn.addEventListener('click', function () {
+            activateRole(btn);
+          });
+          btn.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+              e.preventDefault();
+              var next =
+                e.key === 'ArrowDown'
+                  ? (idx + 1) % roleBtns.length
+                  : (idx - 1 + roleBtns.length) % roleBtns.length;
+              roleBtns[next].focus();
+              activateRole(roleBtns[next]);
+            }
+          });
+        });
+
+        // 6. Mobile menu toggle
         var menuBtn = document.getElementById('menu-toggle');
         var drawer = document.getElementById('mobile-drawer');
         if (menuBtn && drawer) {
