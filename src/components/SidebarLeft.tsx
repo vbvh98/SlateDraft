@@ -104,7 +104,7 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({
   onAddIntervalMarker,
 }) => {
   const [sceneFilter, setSceneFilter] = useState('');
-  const [paletteExpanded, setPaletteExpanded] = useState(true);
+  const [paletteExpanded, setPaletteExpanded] = useState(false);
 
   const sceneCount = useMemo(
     () => blocks.filter((b) => b.elementType === 'scene-heading').length,
@@ -165,7 +165,7 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({
           </span>
           <span className="flex items-center gap-1.5">
             {!paletteExpanded && activeElementItem && (
-              <span className="text-[10px] font-medium text-amber-500 bg-amber-500/10 border border-amber-500/25 rounded px-1.5 py-0.5">
+              <span className="text-[10px] font-medium text-[var(--accent-text)] bg-[var(--accent-soft)] border border-[var(--accent-border)] rounded px-1.5 py-0.5">
                 {activeElementItem.shortLabel}
               </span>
             )}

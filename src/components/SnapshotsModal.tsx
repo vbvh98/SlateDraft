@@ -111,10 +111,27 @@ export const SnapshotsModal: React.FC<SnapshotsModalProps> = ({
     [snapshots, selectedSnapshotId]
   );
 
-  const diffResult = useMemo(() => {
-    if (!selectedSnapshot) return null;
-    return diffDraftSnapshots(selectedSnapshot.blocks, currentBlocks);
-  }, [selectedSnapshot, currentBlocks]);
+  const [diffResult, setDiffResult] = useState<Awaited<
+    ReturnType<typeof diffDraftSnapshots>
+  > | null>(null);
+
+  useEffect(() => {
+    if (!open || !selectedSnapshot) {
+      setDiffResult(null);
+      return;
+    }
+    let cancelled = false;
+    Promise.resolve(diffDraftSnapshots(selectedSnapshot.blocks, currentBlocks))
+      .then((res) => {
+        if (!cancelled) setDiffResult(res);
+      })
+      .catch(() => {
+        if (!cancelled) setDiffResult(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, selectedSnapshot, currentBlocks]);
 
   const totalChanges = diffResult
     ? diffResult.addedCount + diffResult.modifiedCount + diffResult.removedCount

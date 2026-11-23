@@ -116,7 +116,7 @@ export const EditingToolbar: React.FC<EditingToolbarProps> = ({
   const langMeta = LANGUAGE_METADATA[language];
 
   return (
-    <div className="no-print relative border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-1.5 flex flex-wrap items-center justify-between gap-3 text-xs select-none z-20 transition-colors">
+    <div className="no-print relative border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs select-none z-20 transition-colors">
       {/* Left: Quick Undo/Redo + Current Element Switcher Pill */}
       <div className="flex items-center gap-2">
         <div className="flex items-center border border-[var(--border-subtle)] rounded-md bg-[var(--bg-surface-2)] overflow-hidden">
@@ -149,7 +149,7 @@ export const EditingToolbar: React.FC<EditingToolbarProps> = ({
               setElementDropdownOpen((prev) => !prev);
               setCheatSheetOpen(false);
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--accent-soft)] border border-[var(--accent)]/40 text-[var(--accent)] font-medium hover:brightness-110 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--accent-soft)] border border-[var(--accent-border)] text-[var(--accent-text)] font-medium hover:brightness-105 active:scale-[0.98] transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
           >
             {currentMeta.icon}
             <span className="font-semibold text-[11px] uppercase tracking-wide">
@@ -162,7 +162,7 @@ export const EditingToolbar: React.FC<EditingToolbarProps> = ({
             <div
               role="listbox"
               aria-label="Screenplay element type"
-              className="absolute top-full left-0 mt-1.5 w-52 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs"
+              className="animate-studio-pop absolute top-full left-0 mt-1.5 w-52 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs"
             >
               <div className="px-2.5 py-1 text-[10px] uppercase font-semibold tracking-wider text-[var(--text-muted)]">
                 Block Element (Tab / ⌘1–8)
@@ -194,12 +194,12 @@ export const EditingToolbar: React.FC<EditingToolbarProps> = ({
           )}
         </div>
 
-        {/* Next Element Flow Hint */}
-        <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] font-mono px-2 py-0.5 rounded bg-[var(--bg-surface-2)] border border-[var(--border-subtle)]">
-          <CornerDownLeft className="w-3 h-3 text-[var(--accent)]" />
-          <span>Enter → {currentMeta.next}</span>
-          <span className="opacity-40">|</span>
-          <span className="text-[var(--text-secondary)]">Tab → Cycle</span>
+        {/* Next Element Flow Hint (quiet inline hint on wide screens) */}
+        <div className="hidden xl:flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] font-mono pl-1">
+          <CornerDownLeft className="w-3 h-3 text-[var(--accent-text)]" />
+          <span>{currentMeta.next}</span>
+          <span className="opacity-40">·</span>
+          <span>Tab cycle</span>
         </div>
 
         {/* Dual Dialogue Quick Toggle when editing Dialogue or Character */}
@@ -265,7 +265,7 @@ export const EditingToolbar: React.FC<EditingToolbarProps> = ({
             <div
               role="dialog"
               aria-label="Screenplay keyboard shortcuts"
-              className="absolute top-full right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl p-4 z-50 text-[var(--text-primary)] space-y-3"
+              className="animate-studio-pop absolute top-full right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl p-4 z-50 text-[var(--text-primary)] space-y-3"
             >
               <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
                 <div className="flex items-center gap-1.5">

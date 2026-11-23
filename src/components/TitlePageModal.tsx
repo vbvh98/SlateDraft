@@ -118,7 +118,7 @@ export const TitlePageModal: React.FC<TitlePageModalProps> = ({
         />
 
         {/* Anti-Leak Security Watermark Box */}
-        <div className="p-4 rounded-xl bg-[var(--bg-surface-2)] border border-amber-500/30 space-y-3">
+        <div className="p-4 rounded-xl bg-[var(--bg-surface-2)] border border-[var(--accent-border)] space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Badge variant="amber" uppercase>

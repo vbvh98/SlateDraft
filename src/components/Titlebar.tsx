@@ -209,7 +209,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({
     >
       <div
         data-tauri-drag-region
-        className="min-h-11 py-1.5 lg:py-0 lg:h-11 px-2.5 sm:px-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 xl:grid xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3"
+        className="min-h-11 py-1.5 lg:py-0 lg:h-11 px-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 xl:grid xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3"
       >
         {/* Left: Application Menus + Editable Script Title */}
         <div
@@ -293,9 +293,9 @@ export const Titlebar: React.FC<TitlebarProps> = ({
                   aria-selected={isActive}
                   onClick={() => onSelectView(tab.id)}
                   title={tab.title}
-                  className={`h-[26px] px-2.5 rounded-md text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
+                  className={`h-[26px] px-2.5 rounded-md text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
                     isActive
-                      ? 'bg-amber-500 text-stone-950 font-semibold shadow-xs'
+                      ? 'bg-[var(--accent)] text-[var(--accent-on)] font-semibold shadow-xs'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]/70'
                   }`}
                 >
@@ -320,7 +320,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({
         >
           {/* Input Language Selector */}
           <div className="relative h-7 inline-flex items-center bg-[var(--bg-surface-2)] hover:bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md pl-2 pr-5 text-xs transition-colors focus-within:ring-2 focus-within:ring-amber-500/60">
-            <Globe className="w-3.5 h-3.5 text-amber-500 shrink-0 mr-1.5" aria-hidden="true" />
+            <Globe className="w-3.5 h-3.5 text-[var(--accent-text)] shrink-0 mr-1.5" aria-hidden="true" />
             <select
               aria-label="Input Language"
               value={language}
@@ -373,7 +373,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({
               <div
                 role="menu"
                 aria-label="Draft Revision Color"
-                className="absolute right-0 top-full mt-1.5 w-52 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs"
+                className="animate-studio-pop absolute right-0 top-full mt-1.5 w-52 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs"
               >
                 <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold border-b border-[var(--border-subtle)] mb-1">
                   Draft Revision Color

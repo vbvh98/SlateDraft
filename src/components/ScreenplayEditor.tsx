@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   Columns,
   EyeOff,
@@ -152,6 +152,316 @@ const NEXT_ELEMENT_ON_ENTER: Record<ElementType, ElementType> = {
   'section-act': 'scene-heading',
   note: 'action',
 };
+
+function adjustTextareaHeight(el: HTMLTextAreaElement | null) {
+  if (!el) return;
+  el.style.height = 'auto';
+  el.style.height = `${Math.max(26, el.scrollHeight)}px`;
+}
+
+function getBlockLayoutClasses(
+  type: ElementType,
+  isDual: boolean,
+  accentTextClass: string
+): string {
+  switch (type) {
+    case 'scene-heading':
+      return 'font-bold uppercase tracking-wide py-1.5 px-2 rounded bg-amber-500/10 border-l-2 border-amber-500 mt-5 mb-2';
+    case 'action':
+      return 'my-1.5 leading-relaxed';
+    case 'character':
+      return `uppercase font-semibold tracking-wider mt-4 mb-0.5 ${
+        isDual
+          ? `ml-[12%] border-l-2 border-amber-500/45 pl-2.5 ${accentTextClass}`
+          : 'ml-[34%] w-[45%]'
+      }`;
+    case 'parenthetical':
+      return 'ml-[27%] w-[42%] italic opacity-80 my-0.5 text-[14px]';
+    case 'dialogue':
+      return `mb-2 leading-relaxed ${
+        isDual
+          ? 'ml-[8%] w-[82%] border-l-2 border-amber-500/35 pl-2.5'
+          : 'ml-[18%] w-[62%]'
+      }`;
+    case 'transition':
+      return 'uppercase font-semibold text-right tracking-wider my-3 pr-4';
+    case 'shot':
+      return `uppercase font-semibold tracking-wide my-2 ${accentTextClass}`;
+    case 'song-lyric':
+      return 'ml-[20%] w-[65%] italic border-l-2 border-amber-500/50 pl-3 py-1 my-2 bg-amber-500/5 rounded-r';
+    case 'section-act':
+      return `uppercase font-bold text-center tracking-widest py-2 my-5 border-y border-amber-500/30 text-xs ${accentTextClass}`;
+    case 'note':
+      return 'mx-[10%] my-2 p-2.5 rounded bg-amber-500/10 border border-amber-500/30 text-xs italic';
+  }
+}
+
+function getPlaceholderForType(type: ElementType, language: IndicLanguage): string {
+  switch (type) {
+    case 'scene-heading':
+      return 'INT. LOCATION - DAY';
+    case 'action':
+      return 'Describe scene action, setting, and visual movement...';
+    case 'character':
+      return 'CHARACTER NAME';
+    case 'parenthetical':
+      return '(beat / tone direction)';
+    case 'dialogue':
+      return language === 'english'
+        ? 'Character dialogue...'
+        : `Type dialogue in ${LANGUAGE_METADATA[language].label} (press Space to transliterate)...`;
+    case 'transition':
+      return 'CUT TO:';
+    case 'shot':
+      return 'ANGLE ON / CLOSE UP:';
+    case 'song-lyric':
+      return '♪ Lyric stanza or musical cue...';
+    case 'section-act':
+      return 'ACT I / PRE-INTERVAL BLOCK';
+    case 'note':
+      return 'Script supervisor or writer note (omitted from standard export)...';
+  }
+}
+
+interface ScriptBlockRowProps {
+  block: ScriptBlock;
+  isFocused: boolean;
+  showContd: boolean;
+  showDualPill: boolean;
+  pageBreakNumber: number | undefined;
+  isActiveMatchBlock: boolean;
+  isAnyMatchBlock: boolean;
+  isLightPaper: boolean;
+  accentTextClass: string;
+  language: IndicLanguage;
+  canDelete: boolean;
+  registerInputRef: (id: string, el: HTMLTextAreaElement | null) => void;
+  onSelectBlock: (id: string) => void;
+  onUpdateBlockText: (id: string, text: string) => void;
+  onBlockKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>, block: ScriptBlock) => void;
+  onToggleDualDialogue: (id: string) => void;
+  onToggleOmitBlock: (id: string) => void;
+  onInsertBlockAfter: (afterId: string, elementType: ElementType) => string;
+  onDeleteBlock: (id: string) => void;
+}
+
+const ScriptBlockRow: React.FC<ScriptBlockRowProps> = React.memo(
+  ({
+    block,
+    isFocused,
+    showContd,
+    showDualPill,
+    pageBreakNumber,
+    isActiveMatchBlock,
+    isAnyMatchBlock,
+    isLightPaper,
+    accentTextClass,
+    language,
+    canDelete,
+    registerInputRef,
+    onSelectBlock,
+    onUpdateBlockText,
+    onBlockKeyDown,
+    onToggleDualDialogue,
+    onToggleOmitBlock,
+    onInsertBlockAfter,
+    onDeleteBlock,
+  }) => {
+    const localRef = useRef<HTMLTextAreaElement | null>(null);
+    const isRevised = block.revisionColor !== 'white';
+
+    useLayoutEffect(() => {
+      adjustTextareaHeight(localRef.current);
+    }, [block.text, block.elementType]);
+
+    const setRefs = useCallback(
+      (el: HTMLTextAreaElement | null) => {
+        localRef.current = el;
+        registerInputRef(block.id, el);
+      },
+      [block.id, registerInputRef]
+    );
+
+    return (
+      <>
+        {pageBreakNumber !== undefined && (
+          <div
+            aria-label={`Page ${pageBreakNumber}`}
+            className="no-print my-6 flex items-center gap-3 select-none"
+          >
+            <div className="flex-1 border-t border-dashed border-[var(--border-subtle)] opacity-80" />
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-surface-2)] border border-[var(--border-subtle)]">
+              Page {pageBreakNumber}
+            </span>
+            <div className="flex-1 border-t border-dashed border-[var(--border-subtle)] opacity-80" />
+          </div>
+        )}
+
+        <div
+          data-block-row="true"
+          data-element-type={block.elementType}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectBlock(block.id);
+          }}
+          className={`group relative flex items-start gap-2 rounded transition-colors ${
+            block.omitted ? 'opacity-40 line-through' : ''
+          } ${
+            isActiveMatchBlock
+              ? 'ring-1 ring-[var(--accent)] bg-[var(--accent-soft)]'
+              : isAnyMatchBlock
+                ? 'bg-[var(--accent-soft)]/40'
+                : ''
+          }`}
+        >
+          {/* Left Gutter: Scene Number, Song Icon, or Dual Dialogue Pill */}
+          <div className="w-12 shrink-0 pt-2 text-right select-none font-mono text-xs opacity-75 flex flex-col items-end gap-1">
+            {block.elementType === 'scene-heading' && block.sceneNumber ? (
+              <span className="inline-flex items-center gap-0.5 font-bold">
+                {block.sceneNumber}
+                {block.locked && <Lock className="w-2.5 h-2.5 text-amber-500 inline" />}
+              </span>
+            ) : block.elementType === 'song-lyric' ? (
+              <Music className="w-3.5 h-3.5 text-amber-500 inline" />
+            ) : showDualPill ? (
+              <span
+                title="Dual Dialogue block (paired side-by-side in export)"
+                className={`no-print inline-flex items-center px-1 py-0.5 rounded text-[9px] font-mono font-semibold uppercase tracking-wider bg-amber-500/15 border border-amber-500/35 ${
+                  isLightPaper ? 'text-amber-700' : 'text-amber-300'
+                }`}
+              >
+                DUAL
+              </span>
+            ) : null}
+          </div>
+
+          {/* Center Editable Screenplay Element */}
+          <div
+            className={`flex-1 ${getBlockLayoutClasses(
+              block.elementType,
+              block.isDualDialogue,
+              accentTextClass
+            )} ${showContd ? 'flex items-baseline gap-1.5' : ''}`}
+          >
+            <textarea
+              ref={setRefs}
+              data-script-block="true"
+              rows={1}
+              value={block.text}
+              onFocus={() => onSelectBlock(block.id)}
+              onChange={(e) => {
+                onUpdateBlockText(block.id, e.target.value);
+                adjustTextareaHeight(e.target);
+              }}
+              onKeyDown={(e) => onBlockKeyDown(e, block)}
+              placeholder={getPlaceholderForType(block.elementType, language)}
+              className={`${
+                showContd ? 'min-w-0 flex-1' : 'w-full'
+              } resize-none overflow-hidden bg-transparent focus:outline-none placeholder:opacity-35 ${
+                block.elementType === 'scene-heading' ||
+                block.elementType === 'character' ||
+                block.elementType === 'transition' ||
+                block.elementType === 'shot' ||
+                block.elementType === 'section-act'
+                  ? 'uppercase'
+                  : ''
+              }`}
+            />
+            {showContd && (
+              <span
+                data-contd-indicator="true"
+                aria-label="Continued dialogue"
+                className="shrink-0 font-script text-[13px] font-normal tracking-wider opacity-55 select-none pointer-events-none"
+              >
+                (CONT&apos;D)
+              </span>
+            )}
+          </div>
+
+          {/* Right Gutter: Hover/Focus Quick Actions & Right-Margin Revision Asterisk */}
+          <div className="w-24 shrink-0 pt-1.5 flex items-center justify-end gap-1 select-none">
+            <div
+              className={`no-print flex items-center gap-0.5 transition-opacity duration-150 ${
+                isFocused
+                  ? 'opacity-45 hover:opacity-100 focus-within:opacity-100'
+                  : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
+              }`}
+            >
+              {(block.elementType === 'character' || block.elementType === 'dialogue') && (
+                <IconButton
+                  size="xs"
+                  active={block.isDualDialogue}
+                  icon={<Columns className="w-3 h-3" />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleDualDialogue(block.id);
+                  }}
+                  title="Toggle Dual Dialogue (Side-by-Side)"
+                  aria-label="Toggle dual dialogue"
+                />
+              )}
+
+              <IconButton
+                size="xs"
+                icon={<EyeOff className="w-3 h-3" />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleOmitBlock(block.id);
+                }}
+                title={block.omitted ? 'Restore Block' : 'Omit Block'}
+                aria-label={block.omitted ? 'Restore block' : 'Omit block'}
+              />
+
+              <IconButton
+                size="xs"
+                icon={<Plus className="w-3 h-3" />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onInsertBlockAfter(
+                    block.id,
+                    NEXT_ELEMENT_ON_ENTER[block.elementType] ?? 'action'
+                  );
+                }}
+                title="Insert Block Below (Enter)"
+                aria-label="Insert block below"
+              />
+
+              {canDelete && (
+                <IconButton
+                  size="xs"
+                  variant="danger"
+                  icon={<Trash2 className="w-3 h-3" />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteBlock(block.id);
+                  }}
+                  title="Delete Block"
+                  aria-label="Delete block"
+                />
+              )}
+            </div>
+
+            <span
+              data-revision-asterisk={isRevised ? 'true' : undefined}
+              aria-hidden={!isRevised}
+              title={
+                isRevised
+                  ? `Revised (${block.revisionColor.toUpperCase()} Draft)`
+                  : undefined
+              }
+              className={`w-3.5 text-right font-mono font-bold text-sm leading-none shrink-0 ${
+                isRevised ? 'text-amber-500 opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              *
+            </span>
+          </div>
+        </div>
+      </>
+    );
+  }
+);
+ScriptBlockRow.displayName = 'ScriptBlockRow';
 
 export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
   blocks,
@@ -423,19 +733,13 @@ export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
     pendingCursorPosRef.current = null;
   }, [activeBlockId]);
 
-  const adjustHeight = (el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${Math.max(26, el.scrollHeight)}px`;
-  };
-
-  const blocksStructureKey = `${blocks.length}:${blocks[0]?.id ?? ''}:${
-    blocks[blocks.length - 1]?.id ?? ''
-  }`;
-
-  useEffect(() => {
-    Object.values(inputRefs.current).forEach((el) => adjustHeight(el));
-  }, [blocksStructureKey]);
+  const registerInputRef = useCallback((id: string, el: HTMLTextAreaElement | null) => {
+    if (el) {
+      inputRefs.current[id] = el;
+    } else {
+      delete inputRefs.current[id];
+    }
+  }, []);
 
   const handleKeyDown = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
@@ -610,6 +914,16 @@ export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
     }
   };
 
+  const handleKeyDownRef = useRef(handleKeyDown);
+  handleKeyDownRef.current = handleKeyDown;
+
+  const onBlockKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>, block: ScriptBlock) => {
+      void handleKeyDownRef.current(e, block);
+    },
+    []
+  );
+
   const applyCandidateReplacement = (
     block: ScriptBlock,
     currentInserted: string,
@@ -675,66 +989,6 @@ export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
         : 'bg-[#181816] text-stone-100 border-stone-800/90 shadow-2xl shadow-black/70';
 
   const accentTextClass = isLightPaper ? 'text-amber-700' : 'text-amber-400';
-
-  const getBlockLayoutClasses = (type: ElementType, isDual: boolean): string => {
-    switch (type) {
-      case 'scene-heading':
-        return 'font-bold uppercase tracking-wide py-1.5 px-2 rounded bg-amber-500/10 border-l-2 border-amber-500 mt-5 mb-2';
-      case 'action':
-        return 'my-1.5 leading-relaxed';
-      case 'character':
-        return `uppercase font-semibold tracking-wider mt-4 mb-0.5 ${
-          isDual
-            ? `ml-[12%] border-l-2 border-amber-500/45 pl-2.5 ${accentTextClass}`
-            : 'ml-[34%] w-[45%]'
-        }`;
-      case 'parenthetical':
-        return 'ml-[27%] w-[42%] italic opacity-80 my-0.5 text-[14px]';
-      case 'dialogue':
-        return `mb-2 leading-relaxed ${
-          isDual
-            ? 'ml-[8%] w-[82%] border-l-2 border-amber-500/35 pl-2.5'
-            : 'ml-[18%] w-[62%]'
-        }`;
-      case 'transition':
-        return 'uppercase font-semibold text-right tracking-wider my-3 pr-4';
-      case 'shot':
-        return `uppercase font-semibold tracking-wide my-2 ${accentTextClass}`;
-      case 'song-lyric':
-        return 'ml-[20%] w-[65%] italic border-l-2 border-amber-500/50 pl-3 py-1 my-2 bg-amber-500/5 rounded-r';
-      case 'section-act':
-        return `uppercase font-bold text-center tracking-widest py-2 my-5 border-y border-amber-500/30 text-xs ${accentTextClass}`;
-      case 'note':
-        return 'mx-[10%] my-2 p-2.5 rounded bg-amber-500/10 border border-amber-500/30 text-xs italic';
-    }
-  };
-
-  const getPlaceholderForType = (type: ElementType): string => {
-    switch (type) {
-      case 'scene-heading':
-        return 'INT. LOCATION - DAY';
-      case 'action':
-        return 'Describe scene action, setting, and visual movement...';
-      case 'character':
-        return 'CHARACTER NAME';
-      case 'parenthetical':
-        return '(beat / tone direction)';
-      case 'dialogue':
-        return language === 'english'
-          ? 'Character dialogue...'
-          : `Type dialogue in ${LANGUAGE_METADATA[language].label} (press Space to transliterate)...`;
-      case 'transition':
-        return 'CUT TO:';
-      case 'shot':
-        return 'ANGLE ON / CLOSE UP:';
-      case 'song-lyric':
-        return '♪ Lyric stanza or musical cue...';
-      case 'section-act':
-        return 'ACT I / PRE-INTERVAL BLOCK';
-      case 'note':
-        return 'Script supervisor or writer note (omitted from standard export)...';
-    }
-  };
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[var(--bg-app)] relative transition-colors">
@@ -927,7 +1181,6 @@ export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
           <div className="relative z-10">
             {blocks.map((block) => {
               const isFocused = activeBlockId === block.id;
-              const isRevised = block.revisionColor !== 'white';
               const showContd =
                 block.elementType === 'character' && contdBlockIds.has(block.id);
               const showDualPill =
@@ -938,185 +1191,28 @@ export const ScreenplayEditor: React.FC<ScreenplayEditorProps> = ({
               const isAnyMatchBlock = findOpen && matchedBlockIds.has(block.id);
 
               return (
-                <React.Fragment key={block.id}>
-                  {pageBreakNumber !== undefined && (
-                    <div
-                      aria-label={`Page ${pageBreakNumber}`}
-                      className="no-print my-6 flex items-center gap-3 select-none"
-                    >
-                      <div className="flex-1 border-t border-dashed border-[var(--border-subtle)] opacity-80" />
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-surface-2)] border border-[var(--border-subtle)]">
-                        Page {pageBreakNumber}
-                      </span>
-                      <div className="flex-1 border-t border-dashed border-[var(--border-subtle)] opacity-80" />
-                    </div>
-                  )}
-
-                  <div
-                    data-block-row="true"
-                    data-element-type={block.elementType}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectBlock(block.id);
-                    }}
-                    className={`group relative flex items-start gap-2 rounded transition-colors ${
-                      block.omitted ? 'opacity-40 line-through' : ''
-                    } ${
-                      isActiveMatchBlock
-                        ? 'ring-1 ring-[var(--accent)] bg-[var(--accent-soft)]'
-                        : isAnyMatchBlock
-                          ? 'bg-[var(--accent-soft)]/40'
-                          : ''
-                    }`}
-                  >
-                  {/* Left Gutter: Scene Number, Song Icon, or Dual Dialogue Pill */}
-                  <div className="w-12 shrink-0 pt-2 text-right select-none font-mono text-xs opacity-75 flex flex-col items-end gap-1">
-                    {block.elementType === 'scene-heading' && block.sceneNumber ? (
-                      <span className="inline-flex items-center gap-0.5 font-bold">
-                        {block.sceneNumber}
-                        {block.locked && <Lock className="w-2.5 h-2.5 text-amber-500 inline" />}
-                      </span>
-                    ) : block.elementType === 'song-lyric' ? (
-                      <Music className="w-3.5 h-3.5 text-amber-500 inline" />
-                    ) : showDualPill ? (
-                      <span
-                        title="Dual Dialogue block (paired side-by-side in export)"
-                        className={`no-print inline-flex items-center px-1 py-0.5 rounded text-[9px] font-mono font-semibold uppercase tracking-wider bg-amber-500/15 border border-amber-500/35 ${
-                          isLightPaper ? 'text-amber-700' : 'text-amber-300'
-                        }`}
-                      >
-                        DUAL
-                      </span>
-                    ) : null}
-                  </div>
-
-                  {/* Center Editable Screenplay Element */}
-                  <div
-                    className={`flex-1 ${getBlockLayoutClasses(
-                      block.elementType,
-                      block.isDualDialogue
-                    )} ${showContd ? 'flex items-baseline gap-1.5' : ''}`}
-                  >
-                    <textarea
-                      ref={(el) => {
-                        inputRefs.current[block.id] = el;
-                      }}
-                      data-script-block="true"
-                      rows={1}
-                      value={block.text}
-                      onFocus={() => onSelectBlock(block.id)}
-                      onChange={(e) => {
-                        onUpdateBlockText(block.id, e.target.value);
-                        adjustHeight(e.target);
-                      }}
-                      onKeyDown={(e) => handleKeyDown(e, block)}
-                      placeholder={getPlaceholderForType(block.elementType)}
-                      className={`${
-                        showContd ? 'min-w-0 flex-1' : 'w-full'
-                      } resize-none overflow-hidden bg-transparent focus:outline-none placeholder:opacity-35 ${
-                        block.elementType === 'scene-heading' ||
-                        block.elementType === 'character' ||
-                        block.elementType === 'transition' ||
-                        block.elementType === 'shot' ||
-                        block.elementType === 'section-act'
-                          ? 'uppercase'
-                          : ''
-                      }`}
-                    />
-                    {showContd && (
-                      <span
-                        data-contd-indicator="true"
-                        aria-label="Continued dialogue"
-                        className="shrink-0 font-script text-[13px] font-normal tracking-wider opacity-55 select-none pointer-events-none"
-                      >
-                        (CONT&apos;D)
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Right Gutter: Hover/Focus Quick Actions & Right-Margin Revision Asterisk */}
-                  <div className="w-24 shrink-0 pt-1.5 flex items-center justify-end gap-1 select-none">
-                    <div
-                      className={`no-print flex items-center gap-0.5 transition-opacity ${
-                        isFocused
-                          ? 'opacity-100'
-                          : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
-                      }`}
-                    >
-                      {(block.elementType === 'character' ||
-                        block.elementType === 'dialogue') && (
-                        <IconButton
-                          size="xs"
-                          active={block.isDualDialogue}
-                          icon={<Columns className="w-3 h-3" />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleDualDialogue(block.id);
-                          }}
-                          title="Toggle Dual Dialogue (Side-by-Side)"
-                          aria-label="Toggle dual dialogue"
-                        />
-                      )}
-
-                      <IconButton
-                        size="xs"
-                        icon={<EyeOff className="w-3 h-3" />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggleOmitBlock(block.id);
-                        }}
-                        title={block.omitted ? 'Restore Block' : 'Omit Block'}
-                        aria-label={block.omitted ? 'Restore block' : 'Omit block'}
-                      />
-
-                      <IconButton
-                        size="xs"
-                        icon={<Plus className="w-3 h-3" />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onInsertBlockAfter(
-                            block.id,
-                            NEXT_ELEMENT_ON_ENTER[block.elementType] ?? 'action'
-                          );
-                        }}
-                        title="Insert Block Below (Enter)"
-                        aria-label="Insert block below"
-                      />
-
-                      {blocks.length > 1 && (
-                        <IconButton
-                          size="xs"
-                          variant="danger"
-                          icon={<Trash2 className="w-3 h-3" />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteBlock(block.id);
-                          }}
-                          title="Delete Block"
-                          aria-label="Delete block"
-                        />
-                      )}
-                    </div>
-
-                    <span
-                      data-revision-asterisk={isRevised ? 'true' : undefined}
-                      aria-hidden={!isRevised}
-                      title={
-                        isRevised
-                          ? `Revised (${block.revisionColor.toUpperCase()} Draft)`
-                          : undefined
-                      }
-                      className={`w-3.5 text-right font-mono font-bold text-sm leading-none shrink-0 ${
-                        isRevised
-                          ? 'text-amber-500 opacity-100'
-                          : 'opacity-0 pointer-events-none'
-                      }`}
-                    >
-                      *
-                    </span>
-                  </div>
-                  </div>
-                </React.Fragment>
+                <ScriptBlockRow
+                  key={block.id}
+                  block={block}
+                  isFocused={isFocused}
+                  showContd={showContd}
+                  showDualPill={showDualPill}
+                  pageBreakNumber={pageBreakNumber}
+                  isActiveMatchBlock={isActiveMatchBlock}
+                  isAnyMatchBlock={isAnyMatchBlock}
+                  isLightPaper={isLightPaper}
+                  accentTextClass={accentTextClass}
+                  language={language}
+                  canDelete={blocks.length > 1}
+                  registerInputRef={registerInputRef}
+                  onSelectBlock={onSelectBlock}
+                  onUpdateBlockText={onUpdateBlockText}
+                  onBlockKeyDown={onBlockKeyDown}
+                  onToggleDualDialogue={onToggleDualDialogue}
+                  onToggleOmitBlock={onToggleOmitBlock}
+                  onInsertBlockAfter={onInsertBlockAfter}
+                  onDeleteBlock={onDeleteBlock}
+                />
               );
             })}
           </div>

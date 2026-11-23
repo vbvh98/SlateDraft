@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, CheckCircle2, Clock, FileText, Globe, Lock } from 'lucide-react';
 import {
   AVRow,
@@ -259,6 +259,10 @@ export const App: React.FC = () => {
 
   // Ref-backed Undo/Redo History Stack (max 100 entries, debounced text + immediate structural)
   const blocksRef = useRef<ScriptBlock[]>(initialBlocks);
+  const revisionColorRef = useRef<RevisionColor>(revisionColor);
+  revisionColorRef.current = revisionColor;
+  const scenesLockedRef = useRef<boolean>(scenesLocked);
+  scenesLockedRef.current = scenesLocked;
   const historyRef = useRef<ScriptBlock[][]>([initialBlocks]);
   const historyIndexRef = useRef<number>(0);
   const pendingTextCommitRef = useRef<boolean>(false);
@@ -308,7 +312,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const commitBlocks = (next: ScriptBlock[], mode: 'immediate' | 'debounced') => {
+  const commitBlocks = useCallback((next: ScriptBlock[], mode: 'immediate' | 'debounced') => {
     if (mode === 'immediate') {
       flushPendingTextHistory();
       blocksRef.current = next;
@@ -329,7 +333,7 @@ export const App: React.FC = () => {
         }
       }, TEXT_HISTORY_DEBOUNCE_MS);
     }
-  };
+  }, []);
 
   const resetHistory = (freshBlocks: ScriptBlock[]) => {
     if (textDebounceTimerRef.current) {
@@ -344,7 +348,7 @@ export const App: React.FC = () => {
     setHistoryMeta({ index: 0, length: 1, pending: false });
   };
 
-  const handleUndo = () => {
+  const handleUndo = useCallback(() => {
     if (textDebounceTimerRef.current) {
       clearTimeout(textDebounceTimerRef.current);
       textDebounceTimerRef.current = null;
@@ -381,9 +385,9 @@ export const App: React.FC = () => {
       });
       showToast('Undo');
     }
-  };
+  }, []);
 
-  const handleRedo = () => {
+  const handleRedo = useCallback(() => {
     if (textDebounceTimerRef.current) {
       clearTimeout(textDebounceTimerRef.current);
       textDebounceTimerRef.current = null;
@@ -402,7 +406,7 @@ export const App: React.FC = () => {
       });
       showToast('Redo');
     }
-  };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -518,17 +522,32 @@ export const App: React.FC = () => {
     locations: [],
   });
 
+  const analyticsMountedRef = useRef<boolean>(false);
+
   useEffect(() => {
     let cancelled = false;
-    invokeRustAnalytics(blocks, language)
-      .then((report) => {
-        if (!cancelled) setAnalytics(report);
-      })
-      .catch((err) => {
-        console.error('Rust analytics error:', err);
-      });
+    const runAnalytics = () => {
+      invokeRustAnalytics(blocks, language)
+        .then((report) => {
+          if (!cancelled) setAnalytics(report);
+        })
+        .catch((err) => {
+          console.error('Rust analytics error:', err);
+        });
+    };
+
+    if (!analyticsMountedRef.current) {
+      analyticsMountedRef.current = true;
+      runAnalytics();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const timer = setTimeout(runAnalytics, 250);
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
   }, [blocks, language]);
 
@@ -640,11 +659,11 @@ export const App: React.FC = () => {
       const isFdx = lowerName.endsWith('.fdx') || content.includes('<FinalDraft');
 
       const parsed = isFdx
-        ? parseFdxXml(content, revisionColor)
+        ? await parseFdxXml(content, revisionColor)
         : await invokeRustParseScript(content);
 
       if (parsed.length > 0) {
-        const fdxTitleMeta = isFdx ? extractFdxTitlePage(content) : {};
+        const fdxTitleMeta = isFdx ? await extractFdxTitlePage(content) : {};
         setTitlePage((prev) => ({
           ...prev,
           title: (fdxTitleMeta.title || fileName).toUpperCase(),
@@ -703,81 +722,106 @@ export const App: React.FC = () => {
     handleOpenFile();
   };
 
-  // Screenplay block operations
-  const handleUpdateBlockText = (id: string, text: string) => {
-    const next = blocksRef.current.map((b) =>
-      b.id === id ? { ...b, text, revisionColor } : b
-    );
-    commitBlocks(next, 'debounced');
-  };
+  // Screenplay block operations (stabilized with useCallback for memoized ScriptBlockRow)
+  const handleUpdateBlockText = useCallback(
+    (id: string, text: string) => {
+      const rev = revisionColorRef.current;
+      const next = blocksRef.current.map((b) =>
+        b.id === id ? { ...b, text, revisionColor: rev } : b
+      );
+      commitBlocks(next, 'debounced');
+    },
+    [commitBlocks]
+  );
 
-  const handleChangeBlockElement = async (id: string, elementType: ElementType) => {
-    const updated = blocksRef.current.map((b) =>
-      b.id === id
-        ? {
-            ...b,
-            elementType,
-            revisionColor,
-            sceneNumber: elementType === 'scene-heading' ? b.sceneNumber ?? '1' : undefined,
-          }
-        : b
-    );
-    commitBlocks(await invokeRustSceneLocks(updated, scenesLocked), 'immediate');
-  };
+  const handleChangeBlockElement = useCallback(
+    async (id: string, elementType: ElementType) => {
+      const rev = revisionColorRef.current;
+      const updated = blocksRef.current.map((b) =>
+        b.id === id
+          ? {
+              ...b,
+              elementType,
+              revisionColor: rev,
+              sceneNumber: elementType === 'scene-heading' ? b.sceneNumber ?? '1' : undefined,
+            }
+          : b
+      );
+      commitBlocks(await invokeRustSceneLocks(updated, scenesLockedRef.current), 'immediate');
+    },
+    [commitBlocks]
+  );
 
-  const handleInsertBlockAfter = (afterId: string, elementType: ElementType): string => {
-    const newId = `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-    const newBlock: ScriptBlock = {
-      id: newId,
-      elementType,
-      text: elementType === 'scene-heading' ? 'INT. ' : '',
-      locked: false,
-      omitted: false,
-      revisionColor,
-      isDualDialogue: false,
-    };
+  const handleInsertBlockAfter = useCallback(
+    (afterId: string, elementType: ElementType): string => {
+      const newId = `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      const newBlock: ScriptBlock = {
+        id: newId,
+        elementType,
+        text: elementType === 'scene-heading' ? 'INT. ' : '',
+        locked: false,
+        omitted: false,
+        revisionColor: revisionColorRef.current,
+        isDualDialogue: false,
+      };
 
-    const prev = blocksRef.current;
-    const idx = prev.findIndex((b) => b.id === afterId);
-    const next = [...prev];
-    if (idx === -1) {
-      next.push(newBlock);
-    } else {
-      next.splice(idx + 1, 0, newBlock);
-    }
-    commitBlocks(next, 'immediate');
-    void invokeRustSceneLocks(next, scenesLocked).then((locked) => {
-      commitBlocks(locked, 'immediate');
-    });
+      const prev = blocksRef.current;
+      const idx = prev.findIndex((b) => b.id === afterId);
+      const next = [...prev];
+      if (idx === -1) {
+        next.push(newBlock);
+      } else {
+        next.splice(idx + 1, 0, newBlock);
+      }
+      commitBlocks(next, 'immediate');
 
-    setActiveBlockId(newId);
-    return newId;
-  };
+      if (elementType === 'scene-heading' || scenesLockedRef.current) {
+        void invokeRustSceneLocks(next, scenesLockedRef.current).then((locked) => {
+          blocksRef.current = locked;
+          historyRef.current[historyIndexRef.current] = locked;
+          setBlocks(locked);
+        });
+      }
 
-  const handleDeleteBlock = async (id: string) => {
-    const prev = blocksRef.current;
-    if (prev.length <= 1) return;
-    const idx = prev.findIndex((b) => b.id === id);
-    if (idx === -1) return;
-    const next = prev.filter((b) => b.id !== id);
-    const focusIdx = Math.max(0, idx - 1);
-    setActiveBlockId(next[focusIdx]?.id ?? null);
-    commitBlocks(await invokeRustSceneLocks(next, scenesLocked), 'immediate');
-  };
+      setActiveBlockId(newId);
+      return newId;
+    },
+    [commitBlocks]
+  );
 
-  const handleToggleDualDialogue = (id: string) => {
-    const next = blocksRef.current.map((b) =>
-      b.id === id ? { ...b, isDualDialogue: !b.isDualDialogue } : b
-    );
-    commitBlocks(next, 'immediate');
-  };
+  const handleDeleteBlock = useCallback(
+    async (id: string) => {
+      const prev = blocksRef.current;
+      if (prev.length <= 1) return;
+      const idx = prev.findIndex((b) => b.id === id);
+      if (idx === -1) return;
+      const next = prev.filter((b) => b.id !== id);
+      const focusIdx = Math.max(0, idx - 1);
+      setActiveBlockId(next[focusIdx]?.id ?? null);
+      commitBlocks(await invokeRustSceneLocks(next, scenesLockedRef.current), 'immediate');
+    },
+    [commitBlocks]
+  );
 
-  const handleToggleOmitBlock = async (id: string) => {
-    const next = blocksRef.current.map((b) =>
-      b.id === id ? { ...b, omitted: !b.omitted } : b
-    );
-    commitBlocks(await invokeRustSceneLocks(next, scenesLocked), 'immediate');
-  };
+  const handleToggleDualDialogue = useCallback(
+    (id: string) => {
+      const next = blocksRef.current.map((b) =>
+        b.id === id ? { ...b, isDualDialogue: !b.isDualDialogue } : b
+      );
+      commitBlocks(next, 'immediate');
+    },
+    [commitBlocks]
+  );
+
+  const handleToggleOmitBlock = useCallback(
+    async (id: string) => {
+      const next = blocksRef.current.map((b) =>
+        b.id === id ? { ...b, omitted: !b.omitted } : b
+      );
+      commitBlocks(await invokeRustSceneLocks(next, scenesLockedRef.current), 'immediate');
+    },
+    [commitBlocks]
+  );
 
   const handleToggleSceneLocks = async () => {
     const nextLockState = !scenesLocked;
@@ -791,14 +835,28 @@ export const App: React.FC = () => {
     );
   };
 
-  const handleSmartPasteText = async (rawText: string) => {
-    const parsed = await invokeRustParseScript(rawText);
-    if (parsed.length === 0) return;
-    const next = await invokeRustSceneLocks([...blocksRef.current, ...parsed], scenesLocked);
-    commitBlocks(next, 'immediate');
-    setActiveBlockId(parsed[0].id);
-    showToast(`Imported ${parsed.length} structured blocks`);
-  };
+  const handleReplaceAllBlocks = useCallback(
+    (next: ScriptBlock[]) => commitBlocks(next, 'immediate'),
+    [commitBlocks]
+  );
+
+  const handleOpenSmartPaste = useCallback(() => setSmartPasteOpen(true), []);
+  const handleCloseSmartPaste = useCallback(() => setSmartPasteOpen(false), []);
+
+  const handleSmartPasteText = useCallback(
+    async (rawText: string) => {
+      const parsed = await invokeRustParseScript(rawText);
+      if (parsed.length === 0) return;
+      const next = await invokeRustSceneLocks(
+        [...blocksRef.current, ...parsed],
+        scenesLockedRef.current
+      );
+      commitBlocks(next, 'immediate');
+      setActiveBlockId(parsed[0].id);
+      showToast(`Imported ${parsed.length} structured blocks`);
+    },
+    [commitBlocks]
+  );
 
   const handleAddNewScene = () => {
     const lastId = blocksRef.current[blocksRef.current.length - 1]?.id ?? '';
@@ -992,7 +1050,7 @@ export const App: React.FC = () => {
   };
 
   const handleCopyWhatsApp = async () => {
-    const plain = formatWhatsAppReadableText(blocksRef.current);
+    const plain = await formatWhatsAppReadableText(blocksRef.current);
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         await navigator.clipboard.writeText(plain);
@@ -1247,11 +1305,11 @@ export const App: React.FC = () => {
             onDeleteBlock={handleDeleteBlock}
             onToggleDualDialogue={handleToggleDualDialogue}
             onToggleOmitBlock={handleToggleOmitBlock}
-            onReplaceAllBlocks={(next) => commitBlocks(next, 'immediate')}
+            onReplaceAllBlocks={handleReplaceAllBlocks}
             onSmartPasteText={handleSmartPasteText}
             smartPasteOpen={smartPasteOpen}
-            onOpenSmartPaste={() => setSmartPasteOpen(true)}
-            onCloseSmartPaste={() => setSmartPasteOpen(false)}
+            onOpenSmartPaste={handleOpenSmartPaste}
+            onCloseSmartPaste={handleCloseSmartPaste}
             canUndo={canUndo}
             canRedo={canRedo}
             onUndo={handleUndo}

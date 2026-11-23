@@ -8,7 +8,10 @@ pub mod transliteration;
 /// IPC commands exposed to the TypeScript UI. Kept in a dedicated module because
 /// `#[tauri::command]` on `pub fn` at the crate root collides with Tauri's generated macros.
 pub mod commands {
-    use crate::models::{IndicLanguage, ScriptAnalyticsReport, ScriptBlock, TransliterationResult};
+    use crate::models::{
+        FdxTitlePageMeta, IndicLanguage, RevisionColor, ScriptAnalyticsReport, ScriptBlock,
+        SnapshotDiffResult, TransliterationResult,
+    };
     use crate::{analytics, formats, project_io, revisions, transliteration};
 
     /// Local sub-millisecond word transliteration across 9 Indic scripts + Hinglish
@@ -52,6 +55,62 @@ pub mod commands {
     #[cfg_attr(feature = "desktop", tauri::command)]
     pub fn translate_script_line(text: String, target_language: IndicLanguage) -> Result<String, String> {
         Ok(revisions::translate_dialogue_line(&text, target_language))
+    }
+
+    /// Extract Title and Author metadata from Final Draft (.fdx) XML
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn extract_fdx_title_page(xml: String) -> Result<FdxTitlePageMeta, String> {
+        Ok(formats::extract_fdx_title_page(&xml))
+    }
+
+    /// Parse Final Draft (.fdx) XML into structured ScriptBlocks
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn parse_fdx_xml(xml: String, active_revision: RevisionColor) -> Result<Vec<ScriptBlock>, String> {
+        Ok(formats::parse_fdx_xml(&xml, active_revision))
+    }
+
+    /// Format script blocks into WhatsApp/Email-friendly plain text
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn format_whatsapp_readable_text(blocks: Vec<ScriptBlock>) -> Result<String, String> {
+        Ok(formats::format_whatsapp_readable_text(&blocks))
+    }
+
+    /// Format script blocks into styled Courier HTML for rich clipboard copy
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn format_styled_html_clipboard(blocks: Vec<ScriptBlock>) -> Result<String, String> {
+        Ok(formats::format_styled_html_clipboard(&blocks))
+    }
+
+    /// Move a full scene chunk up or down while preserving act markers and recalculating scene numbers
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn move_scene_chunk(
+        blocks: Vec<ScriptBlock>,
+        scene_id: String,
+        direction: String,
+        lock_mode: bool,
+    ) -> Result<Vec<ScriptBlock>, String> {
+        revisions::move_scene_chunk(blocks, &scene_id, &direction, lock_mode)
+    }
+
+    /// Compute block-level and scene-level diff between two draft snapshots
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn diff_draft_snapshots(
+        base_blocks: Vec<ScriptBlock>,
+        current_blocks: Vec<ScriptBlock>,
+    ) -> Result<SnapshotDiffResult, String> {
+        Ok(revisions::diff_draft_snapshots(&base_blocks, &current_blocks))
+    }
+
+    /// Export only changed scenes (relative to a base snapshot) to Fountain format
+    #[cfg_attr(feature = "desktop", tauri::command)]
+    pub fn export_changed_scenes_fountain(
+        title: String,
+        author: String,
+        base_blocks: Vec<ScriptBlock>,
+        current_blocks: Vec<ScriptBlock>,
+    ) -> Result<String, String> {
+        let changed = revisions::filter_changed_scene_blocks(&base_blocks, &current_blocks);
+        Ok(formats::export_to_fountain(&title, &author, &changed))
     }
 
     /// Atomically save a `.slatedraft` project file to disk
@@ -140,6 +199,13 @@ pub fn run() {
             commands::compute_script_analytics,
             commands::update_scene_locks,
             commands::translate_script_line,
+            commands::extract_fdx_title_page,
+            commands::parse_fdx_xml,
+            commands::format_whatsapp_readable_text,
+            commands::format_styled_html_clipboard,
+            commands::move_scene_chunk,
+            commands::diff_draft_snapshots,
+            commands::export_changed_scenes_fountain,
             commands::save_project_file,
             commands::load_project_file,
             commands::write_backup_snapshot,
@@ -386,5 +452,146 @@ mod tests {
         assert_eq!(reloaded, updated);
 
         let _ = std::fs::remove_file(&recent_file);
+    }
+
+    fn make_test_block(id: &str, element_type: ElementType, text: &str, scene_number: Option<&str>) -> ScriptBlock {
+        ScriptBlock {
+            id: id.to_string(),
+            element_type,
+            text: text.to_string(),
+            scene_number: scene_number.map(str::to_string),
+            locked: false,
+            omitted: false,
+            revision_color: RevisionColor::White,
+            is_dual_dialogue: false,
+            synopsis: None,
+            rasa: None,
+            act_marker: None,
+            production_tags: None,
+        }
+    }
+
+    #[test]
+    fn test_fdx_title_extraction_and_xml_parsing() {
+        let fdx_xml = r#"<?xml version="1.0" encoding="UTF-8"?>
+<FinalDraft DocumentType="Script" Version="5">
+  <TitlePage>
+    <Content>
+      <Paragraph Type="Title"><Text>MONSOON &amp; SHADOWS</Text></Paragraph>
+      <Paragraph Type="Author"><Text>Meera Nair</Text></Paragraph>
+    </Content>
+  </TitlePage>
+  <Content>
+    <Paragraph Type="Scene Heading" Number="4">
+      <Text>EXT. </Text><Text>STATION - DAWN</Text>
+    </Paragraph>
+    <DualDialogue>
+      <Paragraph Type="Character"><Text>KAVYA</Text></Paragraph>
+      <Paragraph Type="Dialogue"><Text>Wait!</Text></Paragraph>
+    </DualDialogue>
+  </Content>
+</FinalDraft>"#;
+
+        let meta = formats::extract_fdx_title_page(fdx_xml);
+        assert_eq!(meta.title.as_deref(), Some("MONSOON & SHADOWS"));
+        assert_eq!(meta.written_by.as_deref(), Some("Meera Nair"));
+
+        let parsed = formats::parse_fdx_xml(fdx_xml, RevisionColor::Yellow);
+        assert_eq!(parsed.len(), 3);
+        assert_eq!(parsed[0].element_type, ElementType::SceneHeading);
+        assert_eq!(parsed[0].text, "EXT. STATION - DAWN");
+        assert_eq!(parsed[0].scene_number.as_deref(), Some("4"));
+        assert_eq!(parsed[0].revision_color, RevisionColor::Yellow);
+        assert_eq!(parsed[1].element_type, ElementType::Character);
+        assert!(parsed[1].is_dual_dialogue);
+        assert_eq!(parsed[2].element_type, ElementType::Dialogue);
+        assert!(parsed[2].is_dual_dialogue);
+    }
+
+    #[test]
+    fn test_move_scene_chunk_up_and_down() {
+        let blocks = vec![
+            make_test_block("act1", ElementType::SectionAct, "ACT I", None),
+            make_test_block("s1", ElementType::SceneHeading, "INT. CAFE - DAY", Some("1")),
+            make_test_block("s1-a", ElementType::Action, "Coffee steams.", None),
+            make_test_block("s1-d", ElementType::Dialogue, "Morning.", None),
+            make_test_block("s2", ElementType::SceneHeading, "EXT. STREET - DAY", Some("2")),
+            make_test_block("s2-a", ElementType::Action, "Traffic roars.", None),
+            make_test_block("act2", ElementType::SectionAct, "INTERVAL", None),
+            make_test_block("s3", ElementType::SceneHeading, "INT. ROOFTOP - NIGHT", Some("3")),
+            make_test_block("s3-a", ElementType::Action, "Stars appear.", None),
+        ];
+
+        let at_top = revisions::move_scene_chunk(blocks.clone(), "s1", "up", false).unwrap();
+        assert_eq!(
+            at_top.iter().map(|b| b.id.as_str()).collect::<Vec<_>>(),
+            blocks.iter().map(|b| b.id.as_str()).collect::<Vec<_>>()
+        );
+
+        let moved_down = revisions::move_scene_chunk(blocks.clone(), "s1", "down", false).unwrap();
+        assert_eq!(
+            moved_down.iter().map(|b| b.id.as_str()).collect::<Vec<_>>(),
+            vec!["act1", "s2", "s2-a", "s1", "s1-a", "s1-d", "act2", "s3", "s3-a"]
+        );
+        assert_eq!(
+            moved_down.iter().find(|b| b.id == "s2").and_then(|b| b.scene_number.as_deref()),
+            Some("1")
+        );
+        assert_eq!(
+            moved_down.iter().find(|b| b.id == "s1").and_then(|b| b.scene_number.as_deref()),
+            Some("2")
+        );
+
+        let moved_back = revisions::move_scene_chunk(moved_down, "s1", "up", false).unwrap();
+        assert_eq!(
+            moved_back.iter().map(|b| b.id.as_str()).collect::<Vec<_>>(),
+            blocks.iter().map(|b| b.id.as_str()).collect::<Vec<_>>()
+        );
+
+        assert!(revisions::move_scene_chunk(blocks, "s1", "sideways", false).is_err());
+    }
+
+    #[test]
+    fn test_snapshot_diff_and_changed_scenes_fountain() {
+        let base = vec![
+            make_test_block("s1", ElementType::SceneHeading, "INT. CAFE - DAY", Some("1")),
+            make_test_block("a1", ElementType::Action, "Rain falls.", None),
+            make_test_block("s2", ElementType::SceneHeading, "EXT. ROAD - NIGHT", Some("2")),
+            make_test_block("a2", ElementType::Action, "Empty road.", None),
+        ];
+        let mut current = base.clone();
+        current[3].text = "Crowded road.".to_string();
+        current.push(make_test_block("d2", ElementType::Dialogue, "Run!", None));
+
+        let diff = revisions::diff_draft_snapshots(&base, &current);
+        assert_eq!(diff.added_count, 1);
+        assert_eq!(diff.removed_count, 0);
+        assert_eq!(diff.modified_count, 1);
+        assert_eq!(diff.changed_scene_numbers, vec!["2".to_string()]);
+
+        let changed = revisions::filter_changed_scene_blocks(&base, &current);
+        assert_eq!(changed.len(), 3);
+        assert_eq!(changed[0].id, "s2");
+        let fountain = formats::export_to_fountain("Test", "Author", &changed);
+        assert!(fountain.contains("EXT. ROAD - NIGHT"));
+        assert!(!fountain.contains("INT. CAFE - DAY"));
+    }
+
+    #[test]
+    fn test_whatsapp_and_html_formatting() {
+        let blocks = vec![
+            make_test_block("s1", ElementType::SceneHeading, "INT. CAFE - DAY", Some("1")),
+            make_test_block("c1", ElementType::Character, "KABIR", None),
+            make_test_block("d1", ElementType::Dialogue, "Chai?", None),
+        ];
+        let wa = formats::format_whatsapp_readable_text(&blocks);
+        assert!(wa.contains("*1. INT. CAFE - DAY*"));
+        assert!(wa.contains("*KABIR*"));
+        assert!(wa.contains("Chai?"));
+
+        let html = formats::format_styled_html_clipboard(&blocks);
+        assert!(html.starts_with("<div"));
+        assert!(html.contains("1. INT. CAFE - DAY"));
+        assert!(html.contains("KABIR"));
     }
 }

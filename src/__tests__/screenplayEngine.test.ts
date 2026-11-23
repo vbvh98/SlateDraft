@@ -58,7 +58,7 @@ describe('SlateDraft Desktop Engine & Bridge', () => {
     );
   });
 
-  it('extracts title page metadata and parses Final Draft (.fdx) XML', () => {
+  it('delegates FDX title page metadata extraction and XML parsing to Rust IPC', async () => {
     const fdxXml = `<?xml version="1.0" encoding="UTF-8"?>
 <FinalDraft DocumentType="Script" Version="5">
   <TitlePage>
@@ -78,11 +78,53 @@ describe('SlateDraft Desktop Engine & Bridge', () => {
   </Content>
 </FinalDraft>`;
 
-    const extractedMeta = extractFdxTitlePage(fdxXml);
+    const invoke = vi.fn(async (cmd: string, args?: Record<string, unknown>) => {
+      if (cmd === 'extract_fdx_title_page') {
+        expect(args?.xml).toBe(fdxXml);
+        return { title: 'MONSOON & SHADOWS', writtenBy: 'Meera Nair' };
+      }
+      if (cmd === 'parse_fdx_xml') {
+        expect(args?.activeRevision).toBe('yellow');
+        return [
+          {
+            id: 'fdx-1',
+            elementType: 'scene-heading',
+            text: 'EXT. STATION - DAWN',
+            sceneNumber: '4',
+            locked: false,
+            omitted: false,
+            revisionColor: 'yellow',
+            isDualDialogue: false,
+          },
+          {
+            id: 'fdx-2',
+            elementType: 'character',
+            text: 'KAVYA',
+            locked: false,
+            omitted: false,
+            revisionColor: 'yellow',
+            isDualDialogue: true,
+          },
+          {
+            id: 'fdx-3',
+            elementType: 'dialogue',
+            text: 'Wait!',
+            locked: false,
+            omitted: false,
+            revisionColor: 'yellow',
+            isDualDialogue: true,
+          },
+        ];
+      }
+      throw new Error(`unexpected ${cmd}`);
+    });
+    vi.stubGlobal('window', { __TAURI_INTERNALS__: { invoke } });
+
+    const extractedMeta = await extractFdxTitlePage(fdxXml);
     expect(extractedMeta.title).toBe('MONSOON & SHADOWS');
     expect(extractedMeta.writtenBy).toBe('Meera Nair');
 
-    const parsed = parseFdxXml(fdxXml, 'yellow');
+    const parsed = await parseFdxXml(fdxXml, 'yellow');
     expect(parsed).toHaveLength(3);
     expect(parsed[0].elementType).toBe('scene-heading');
     expect(parsed[0].text).toBe('EXT. STATION - DAWN');
@@ -96,8 +138,36 @@ describe('SlateDraft Desktop Engine & Bridge', () => {
 
   it('moves full scene chunks up and down while preserving act markers and delegating scene numbering to Rust', async () => {
     const invoke = vi.fn(async (cmd: string, args?: Record<string, unknown>) => {
-      if (cmd !== 'update_scene_locks') throw new Error(`unexpected ${cmd}`);
-      const list = args?.blocks as ScriptBlock[];
+      if (cmd !== 'move_scene_chunk') throw new Error(`unexpected ${cmd}`);
+      const list = [...(args?.blocks as ScriptBlock[])];
+      const sceneId = args?.sceneId as string;
+      const direction = args?.direction as 'up' | 'down';
+
+      const chunks: { id: string; start: number; end: number }[] = [];
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].elementType === 'scene-heading') {
+          let end = i + 1;
+          while (
+            end < list.length &&
+            list[end].elementType !== 'scene-heading' &&
+            list[end].elementType !== 'section-act'
+          ) {
+            end++;
+          }
+          chunks.push({ id: list[i].id, start: i, end });
+        }
+      }
+      const curIdx = chunks.findIndex((c) => c.id === sceneId);
+      const tgtIdx = direction === 'up' ? curIdx - 1 : curIdx + 1;
+      if (curIdx === -1 || tgtIdx < 0 || tgtIdx >= chunks.length) {
+        return args?.blocks;
+      }
+      const cur = chunks[curIdx];
+      const tgt = chunks[tgtIdx];
+      const len = cur.end - cur.start;
+      const extracted = list.splice(cur.start, len);
+      list.splice(direction === 'up' ? tgt.start : tgt.end - len, 0, ...extracted);
+
       let num = 1;
       return list.map((b) =>
         b.elementType === 'scene-heading' ? { ...b, sceneNumber: String(num++) } : b

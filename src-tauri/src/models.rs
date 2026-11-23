@@ -137,3 +137,30 @@ pub struct ScriptAnalyticsReport {
     pub characters: Vec<CharacterAnalytics>,
     pub locations: Vec<LocationAnalytics>,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct FdxTitlePageMeta {
+    pub title: Option<String>,
+    pub written_by: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SnapshotDiffEntry {
+    pub status: String,
+    pub element_type: ElementType,
+    pub before_text: Option<String>,
+    pub after_text: Option<String>,
+    pub scene_number: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SnapshotDiffResult {
+    pub added_count: usize,
+    pub removed_count: usize,
+    pub modified_count: usize,
+    pub changed_scene_numbers: Vec<String>,
+    pub entries: Vec<SnapshotDiffEntry>,
+}

@@ -59,7 +59,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center transition-all select-none cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${FOCUS_RING} ${SIZE_CLASSES[size]} ${activeOverride} ${className}`}
+      className={`inline-flex items-center justify-center transition-all duration-150 active:scale-[0.98] select-none cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${FOCUS_RING} ${SIZE_CLASSES[size]} ${activeOverride} ${className}`}
       {...rest}
     >
       {leftIcon && <span className="shrink-0">{leftIcon}</span>}
@@ -99,7 +99,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center transition-colors select-none cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${FOCUS_RING} ${sizeCls} ${variantCls} ${className}`}
+      className={`inline-flex items-center justify-center transition-all duration-150 active:scale-95 select-none cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${FOCUS_RING} ${sizeCls} ${variantCls} ${className}`}
       {...rest}
     >
       {icon}

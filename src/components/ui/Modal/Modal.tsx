@@ -56,7 +56,7 @@ export const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={subtitle ? subtitleId : undefined}
-        className={`bg-[var(--bg-elevated)] border border-[var(--border-strong)] rounded-xl w-full ${maxWidthClass} text-[var(--text-primary)] shadow-[var(--shadow-modal)] flex flex-col max-h-[90vh] overflow-hidden`}
+        className={`animate-studio-pop bg-[var(--bg-elevated)] border border-[var(--border-strong)] rounded-xl w-full ${maxWidthClass} text-[var(--text-primary)] shadow-[var(--shadow-modal)] flex flex-col max-h-[90vh] overflow-hidden`}
       >
         <div className="px-5 py-3.5 border-b border-[var(--border-subtle)] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
