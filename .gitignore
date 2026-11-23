@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+src-tauri/target/
+src-tauri/gen/
+tsconfig.tsbuildinfo
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local tooling / agent scratch
+.agents/
+.taste-skill/
+skills-lock.json
+
+# Logs & env
+*.log
+.env
+.env.local

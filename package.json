@@ -1,0 +1,47 @@
+{
+  "name": "slatedraft-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "SlateDraft Studio — Rust-Powered Screenwriting & Pre-Production Suite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "rust:check": "cargo check --manifest-path src-tauri/Cargo.toml",
+    "rust:clean": "cargo clean --manifest-path src-tauri/Cargo.toml",
+    "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml --no-default-features",
+    "desktop": "cargo run --manifest-path src-tauri/Cargo.toml",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:build:mac": "tauri build --target aarch64-apple-darwin",
+    "tauri:build:intel": "tauri build --target x86_64-apple-darwin",
+    "tauri:build:win": "tauri build --target x86_64-pc-windows-msvc",
+    "tauri:build:linux": "tauri build --target x86_64-unknown-linux-gnu",
+    "tauri:build:dmg": "tauri build --bundles dmg"
+  },
+  "dependencies": {
+    "lucide-react": "0.468.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "4.7.0",
+    "postcss": "8.5.6",
+    "tailwindcss": "4.1.13",
+    "typescript": "5.9.2",
+    "vite": "6.4.3",
+    "vitest": "3.2.4"
+  },
+  "overrides": {
+    "nanoid": "3.3.11",
+    "postcss": "8.5.6",
+    "rollup": "4.50.1"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SlateDraft",
+  "version": "1.0.0",
+  "identifier": "studio.slatedraft.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "title": "SlateDraft Studio — Screenwriting & Pre-Production Suite",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 1024,
+        "minHeight": 680,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "targets": ["dmg", "app", "msi", "nsis", "deb", "rpm", "appimage"],
+    "fileAssociations": [
+      {
+        "ext": ["slatedraft"],
+        "name": "SlateDraft Project",
+        "description": "SlateDraft Studio Screenplay Project",
+        "role": "Editor",
+        "mimeType": "application/vnd.slatedraft.project+json"
+      },
+      {
+        "ext": ["fdx"],
+        "name": "Final Draft Screenplay",
+        "description": "Final Draft XML Screenplay Document",
+        "role": "Editor",
+        "mimeType": "application/vnd.finaldraft+xml"
+      },
+      {
+        "ext": ["fountain"],
+        "name": "Fountain Screenplay",
+        "description": "Fountain Plain-Text Screenplay Document",
+        "role": "Editor",
+        "mimeType": "text/x-fountain"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "12.0",
+      "signingIdentity": null
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    },
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0"]
+      }
+    }
+  }
+}

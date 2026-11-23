@@ -1,0 +1,35 @@
+[package]
+name = "slatedraft-core"
+version = "1.0.0"
+description = "SlateDraft Studio — Screenwriting & Pre-Production Engine"
+authors = ["SlateDraft Studio"]
+edition = "2021"
+
+[lib]
+name = "slatedraft_core"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "slatedraft"
+path = "src/main.rs"
+
+[features]
+default = ["desktop"]
+desktop = ["dep:tauri", "dep:tauri-build"]
+
+[build-dependencies]
+tauri-build = { version = "=2.6.3", optional = true, features = [] }
+
+[dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.150"
+tauri = { version = "=2.11.5", optional = true, features = ["macos-private-api"] }
+
+[profile.release]
+strip = false
+
+[profile.release.build-override]
+strip = false
+
+[profile.dev.build-override]
+strip = false
