@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   Check,
+  ChevronDown,
   Clapperboard,
   ClipboardPaste,
   Clock,
@@ -14,6 +15,7 @@ import {
   History,
   Keyboard,
   Lock,
+  Menu,
   Printer,
   Redo2,
   Save,
@@ -113,6 +115,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
   onRedo,
 }) => {
   const [openMenu, setOpenMenu] = useState<ActiveMenu>(null);
+  const [compactMenuOpen, setCompactMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRefs = useRef<Record<MenuId, HTMLButtonElement | null>>({
     file: null,
@@ -126,6 +129,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpenMenu(null);
+        setCompactMenuOpen(false);
       }
     };
     window.addEventListener('mousedown', handleClickOutside);
@@ -133,7 +137,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!openMenu) return;
+    if (!openMenu && !compactMenuOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -141,14 +145,15 @@ export const MenuBar: React.FC<MenuBarProps> = ({
         e.stopPropagation();
         const current = openMenu;
         setOpenMenu(null);
-        triggerRefs.current[current]?.focus();
-      } else if (e.key === 'ArrowRight') {
+        setCompactMenuOpen(false);
+        if (current) triggerRefs.current[current]?.focus();
+      } else if (openMenu && e.key === 'ArrowRight') {
         e.preventDefault();
         const idx = MENU_ORDER.indexOf(openMenu);
         const next = MENU_ORDER[(idx + 1) % MENU_ORDER.length];
         setOpenMenu(next);
         triggerRefs.current[next]?.focus();
-      } else if (e.key === 'ArrowLeft') {
+      } else if (openMenu && e.key === 'ArrowLeft') {
         e.preventDefault();
         const idx = MENU_ORDER.indexOf(openMenu);
         const prev = MENU_ORDER[(idx - 1 + MENU_ORDER.length) % MENU_ORDER.length];
@@ -159,7 +164,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [openMenu]);
+  }, [openMenu, compactMenuOpen]);
 
   const handleTriggerKeyDown = (menuId: MenuId, e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'ArrowRight') {
@@ -183,17 +188,18 @@ export const MenuBar: React.FC<MenuBarProps> = ({
   const handleAction = (callback: () => void) => {
     callback();
     setOpenMenu(null);
+    setCompactMenuOpen(false);
   };
 
   const triggerClass = (menuId: MenuId) =>
-    `px-1.5 sm:px-2.5 py-1 rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
+    `hidden sm:inline-flex items-center h-7 px-2 rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
       openMenu === menuId
         ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)] font-medium'
         : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-2)] hover:text-[var(--text-primary)]'
     }`;
 
   const panelClass =
-    'absolute top-full left-0 mt-1 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs text-[var(--text-primary)]';
+    'absolute top-full left-0 mt-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-strong)] shadow-2xl py-1 z-50 text-xs text-[var(--text-primary)]';
 
   const itemClass =
     'w-full text-left px-3 py-1.5 hover:bg-amber-500/15 hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:bg-amber-500/15 flex items-center justify-between transition-colors cursor-pointer';
@@ -211,10 +217,58 @@ export const MenuBar: React.FC<MenuBarProps> = ({
       ref={menuRef}
       role="menubar"
       aria-label="Application Menu"
-      className="flex items-center shrink-0 text-xs relative select-none"
+      className="flex items-center gap-0.5 shrink-0 text-xs relative select-none"
     >
+      {/* COMPACT MENU SWITCHER FOR NARROW SCREENS (< 640px) */}
+      <div className="relative sm:hidden">
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={compactMenuOpen || openMenu !== null}
+          onClick={() => {
+            if (openMenu) {
+              setOpenMenu(null);
+              setCompactMenuOpen(false);
+            } else {
+              setCompactMenuOpen((prev) => !prev);
+            }
+          }}
+          className="h-7 px-2 rounded-md inline-flex items-center gap-1.5 bg-[var(--bg-surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-medium cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
+        >
+          <Menu className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
+          <span>Menu</span>
+          <ChevronDown className="w-3 h-3 text-[var(--text-muted)]" />
+        </button>
+
+        {compactMenuOpen && !openMenu && (
+          <div role="menu" aria-label="Studio Menus" className={`${panelClass} w-44`}>
+            {[
+              { id: 'file' as MenuId, label: 'File' },
+              { id: 'edit' as MenuId, label: 'Edit' },
+              { id: 'format' as MenuId, label: 'Format' },
+              { id: 'production' as MenuId, label: 'Production' },
+              { id: 'view' as MenuId, label: 'View' },
+            ].map((entry) => (
+              <button
+                key={entry.id}
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setCompactMenuOpen(false);
+                  setOpenMenu(entry.id);
+                }}
+                className={itemClass}
+              >
+                <span>{entry.label}</span>
+                <span className="text-[10px] text-[var(--text-muted)]">›</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* FILE MENU */}
-      <div className="relative">
+      <div className="sm:relative">
         <button
           ref={(el) => {
             triggerRefs.current.file = el;
@@ -376,7 +430,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
       </div>
 
       {/* EDIT MENU */}
-      <div className="relative">
+      <div className="sm:relative">
         <button
           ref={(el) => {
             triggerRefs.current.edit = el;
@@ -450,7 +504,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
       </div>
 
       {/* FORMAT / ELEMENT MENU */}
-      <div className="relative">
+      <div className="sm:relative">
         <button
           ref={(el) => {
             triggerRefs.current.format = el;
@@ -500,7 +554,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
       </div>
 
       {/* PRODUCTION MENU */}
-      <div className="relative">
+      <div className="sm:relative">
         <button
           ref={(el) => {
             triggerRefs.current.production = el;
@@ -568,7 +622,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
       </div>
 
       {/* VIEW MENU */}
-      <div className="relative">
+      <div className="sm:relative">
         <button
           ref={(el) => {
             triggerRefs.current.view = el;

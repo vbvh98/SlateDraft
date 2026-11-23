@@ -105,17 +105,26 @@ pub mod commands {
         let seq = WINDOW_COUNTER.fetch_add(1, Ordering::Relaxed);
         let label = format!("slatedraft-{millis}-{seq}");
 
-        tauri::WebviewWindowBuilder::new(
+        let mut builder = tauri::WebviewWindowBuilder::new(
             &app,
             label,
             tauri::WebviewUrl::App("index.html".into()),
         )
         .title("SlateDraft Studio")
         .inner_size(1440.0, 900.0)
-        .min_inner_size(1024.0, 680.0)
-        .build()
-        .map(|_| ())
-        .map_err(|e| format!("failed to create new window: {e}"))
+        .min_inner_size(1024.0, 680.0);
+
+        #[cfg(target_os = "macos")]
+        {
+            builder = builder
+                .title_bar_style(tauri::TitleBarStyle::Overlay)
+                .hidden_title(true);
+        }
+
+        builder
+            .build()
+            .map(|_| ())
+            .map_err(|e| format!("failed to create new window: {e}"))
     }
 }
 

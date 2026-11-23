@@ -22,6 +22,7 @@ import {
   WorkspaceView,
 } from '../types/screenplay';
 import { LANGUAGE_METADATA } from '../services/transliterationEngine';
+import { isTauriDesktopRuntime } from '../services/rustBridge';
 import { MenuBar } from './MenuBar';
 import { Button, IconButton } from './ui';
 
@@ -171,6 +172,10 @@ export const Titlebar: React.FC<TitlebarProps> = ({
   const revButtonRef = useRef<HTMLButtonElement>(null);
 
   const currentRev = REVISION_COLORS.find((r) => r.id === revisionColor) ?? REVISION_COLORS[0];
+  const isTauriMac =
+    typeof navigator !== 'undefined' &&
+    isTauriDesktopRuntime() &&
+    /Mac/i.test(navigator.platform || navigator.userAgent);
 
   useEffect(() => {
     if (!revMenuOpen) return;
@@ -198,10 +203,21 @@ export const Titlebar: React.FC<TitlebarProps> = ({
   }, [revMenuOpen]);
 
   return (
-    <header className="no-print border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] select-none z-30">
-      <div className="h-11 px-2.5 sm:px-3 pl-20 flex items-center justify-between gap-2 md:gap-3">
-        {/* Left: Standard Application Menus + Editable Script Title */}
-        <div className="flex items-center gap-1.5 lg:gap-2.5 shrink-0 min-w-0">
+    <header
+      data-tauri-drag-region
+      className="no-print border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] select-none z-30"
+    >
+      <div
+        data-tauri-drag-region
+        className="min-h-11 py-1.5 lg:py-0 lg:h-11 px-2.5 sm:px-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 xl:grid xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3"
+      >
+        {/* Left: Application Menus + Editable Script Title */}
+        <div
+          data-tauri-drag-region
+          className={`order-1 flex items-center gap-1.5 min-w-0 flex-1 xl:flex-none ${
+            isTauriMac ? 'pl-[74px]' : ''
+          }`}
+        >
           <MenuBar
             onNewScript={onNewScript}
             onNewWindow={onNewWindow}
@@ -240,63 +256,76 @@ export const Titlebar: React.FC<TitlebarProps> = ({
             onRedo={onRedo}
           />
 
-          <div className="hidden md:flex items-center gap-1.5 min-w-0">
-            <span className="text-[var(--border-strong)] select-none" aria-hidden="true">
-              |
-            </span>
+          <div
+            data-tauri-drag-region
+            className="hidden sm:flex items-center gap-1.5 min-w-0 flex-1"
+          >
+            <span
+              className="h-3.5 w-px bg-[var(--border-strong)]/70 shrink-0 select-none"
+              aria-hidden="true"
+            />
 
             <input
               type="text"
               value={titlePage.title}
               onChange={(e) => onUpdateTitle(e.target.value)}
               aria-label="Screenplay Title"
-              className="select-text bg-transparent hover:bg-[var(--bg-surface-2)] focus:bg-[var(--bg-elevated)] px-2 py-0.5 rounded-md text-xs font-semibold text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 w-24 md:w-28 lg:w-36 xl:w-44 truncate transition-colors"
+              className="select-text h-7 bg-transparent hover:bg-[var(--bg-surface-2)] focus:bg-[var(--bg-elevated)] px-2 rounded-md text-xs font-semibold tracking-wide text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 min-w-[68px] w-full max-w-[180px] truncate transition-colors"
               placeholder="UNTITLED SCREENPLAY"
             />
           </div>
         </div>
 
-        {/* Center: Segmented Workspace View Switcher */}
-        <div
-          role="tablist"
-          aria-label="Workspace Views"
-          className="flex items-center bg-[var(--bg-surface-2)] p-0.5 rounded-lg border border-[var(--border-subtle)] shrink-0"
-        >
-          {WORKSPACE_TABS.map((tab) => {
-            const isActive = activeView === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => onSelectView(tab.id)}
-                title={tab.title}
-                className={`px-2 xl:px-2.5 py-1 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
-                  isActive
-                    ? 'bg-amber-500 text-stone-950 font-semibold shadow-xs'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]/60'
-                }`}
-              >
-                {tab.icon}
-                <span className={isActive ? 'inline' : 'hidden xl:inline'}>
-                  {tab.label}
-                </span>
-              </button>
-            );
-          })}
+        {/* Center: Segmented Workspace View Switcher (wraps cleanly to sub-row below 1024px) */}
+        <div className="order-3 basis-full pt-1 border-t border-[var(--border-subtle)]/70 flex justify-center lg:order-2 lg:basis-auto lg:pt-0 lg:border-t-0 shrink-0">
+          <div
+            role="tablist"
+            aria-label="Workspace Views"
+            className="inline-flex items-center h-8 bg-[var(--bg-surface-2)] p-0.5 rounded-lg border border-[var(--border-subtle)] max-w-full overflow-x-auto"
+          >
+            {WORKSPACE_TABS.map((tab) => {
+              const isActive = activeView === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => onSelectView(tab.id)}
+                  title={tab.title}
+                  className={`h-[26px] px-2.5 rounded-md text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
+                    isActive
+                      ? 'bg-amber-500 text-stone-950 font-semibold shadow-xs'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]/70'
+                  }`}
+                >
+                  {tab.icon}
+                  <span
+                    className={
+                      isActive ? 'inline' : 'hidden sm:inline lg:hidden min-[1400px]:inline'
+                    }
+                  >
+                    {tab.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Right: Language, Interactive Draft Color, Voice, Export, Zen */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Right: Language, Interactive Draft Color, Voice, Export, Zen (always visible) */}
+        <div
+          data-tauri-drag-region
+          className="order-2 lg:order-3 flex items-center justify-end gap-1.5 shrink-0"
+        >
           {/* Input Language Selector */}
-          <div className="flex items-center gap-1 sm:gap-1.5 bg-[var(--bg-surface-2)] border border-[var(--border-subtle)] rounded-md px-1.5 sm:px-2 py-1 text-xs focus-within:ring-2 focus-within:ring-amber-500/60">
-            <Globe className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+          <div className="relative h-7 inline-flex items-center bg-[var(--bg-surface-2)] hover:bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md pl-2 pr-5 text-xs transition-colors focus-within:ring-2 focus-within:ring-amber-500/60">
+            <Globe className="w-3.5 h-3.5 text-amber-500 shrink-0 mr-1.5" aria-hidden="true" />
             <select
               aria-label="Input Language"
               value={language}
               onChange={(e) => onSelectLanguage(e.target.value as IndicLanguage)}
-              className="bg-transparent text-[var(--text-primary)] focus:outline-none cursor-pointer max-w-[70px] sm:max-w-[100px] xl:max-w-none text-xs truncate"
+              className="appearance-none bg-transparent text-[var(--text-primary)] focus:outline-none cursor-pointer max-w-[76px] xl:max-w-[118px] min-[1400px]:max-w-[144px] text-xs truncate pr-1"
             >
               {(Object.keys(LANGUAGE_METADATA) as IndicLanguage[]).map((langKey) => (
                 <option
@@ -308,6 +337,10 @@ export const Titlebar: React.FC<TitlebarProps> = ({
                 </option>
               ))}
             </select>
+            <ChevronDown
+              className="w-3 h-3 text-[var(--text-muted)] pointer-events-none absolute right-1.5"
+              aria-hidden="true"
+            />
           </div>
 
           {/* Interactive Draft Revision Color Pill & Popover */}
@@ -320,12 +353,12 @@ export const Titlebar: React.FC<TitlebarProps> = ({
               aria-label={`Draft Revision Color: ${currentRev.label}`}
               onClick={() => setRevMenuOpen((prev) => !prev)}
               title={`Active Draft: ${currentRev.label} — Click to switch`}
-              className={`flex items-center gap-1.5 bg-[var(--bg-surface-2)] hover:bg-[var(--bg-elevated)] border rounded-md px-2 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
+              className={`h-7 inline-flex items-center gap-1.5 bg-[var(--bg-surface-2)] hover:bg-[var(--bg-elevated)] border rounded-md px-2 text-xs transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60 ${
                 revMenuOpen ? 'border-amber-500/60' : 'border-[var(--border-subtle)]'
               }`}
             >
               <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${currentRev.dotClass}`} />
-              <span className="text-[var(--text-secondary)] text-[11px] hidden 2xl:inline">
+              <span className="text-[var(--text-secondary)] text-[11px] hidden min-[1400px]:inline">
                 {currentRev.label.split(' ')[0]}
               </span>
               <ChevronDown
@@ -377,26 +410,31 @@ export const Titlebar: React.FC<TitlebarProps> = ({
           <Button
             variant={voiceDrawerOpen ? 'primary' : 'outline'}
             size="sm"
+            className="h-7 px-2 xl:px-2.5"
             leftIcon={<Mic className="w-3.5 h-3.5 shrink-0" />}
             onClick={onToggleVoiceDrawer}
             title="Table Read Narration & Voice Tools"
+            aria-label="Voice Tools"
           >
-            <span className="hidden sm:inline">Voice</span>
+            <span className="hidden xl:inline">Voice</span>
           </Button>
 
           <Button
             variant="primary"
             size="sm"
+            className="h-7 px-2.5"
             leftIcon={<Download className="w-3.5 h-3.5 shrink-0" />}
             onClick={onPrintPdf}
             title="Export Screenplay as Industry PDF"
           >
-            <span className="hidden md:inline">Export PDF</span>
-            <span className="hidden sm:inline md:hidden">Export</span>
+            <span className="hidden sm:inline">Export PDF</span>
+            <span className="sm:hidden">PDF</span>
           </Button>
 
           <IconButton
             active={zenMode}
+            variant="secondary"
+            className="h-7 w-7 p-0"
             icon={
               zenMode ? (
                 <Minimize2 className="w-3.5 h-3.5" />
@@ -406,6 +444,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({
             }
             onClick={onToggleZenMode}
             title="Toggle Distraction-Free Zen Mode (⌘\)"
+            aria-label={zenMode ? 'Exit Zen Mode' : 'Enter Zen Mode'}
           />
         </div>
       </div>
