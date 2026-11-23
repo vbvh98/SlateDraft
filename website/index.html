@@ -228,7 +228,7 @@
         </div>
       </section>
 
-      <!-- FOCAL MOTION 0: DYNAMIC-ZOOM PRODUCT SCREEN RECORDING & REAL SCREENSHOTS -->
+      <!-- FOCAL MOTION 0: DESKTOP WORKSPACE WALKTHROUGH & REAL SCREENSHOTS -->
       <section class="section section-surface" id="tour">
         <div class="wrap">
           <div class="section-head">
@@ -236,15 +236,15 @@
               <h2 class="section-title">Captured directly from the desktop release.</h2>
             </div>
             <p class="section-desc">
-              Watch the guided dynamic-zoom tour across all six studio workspaces, click any focal
-              callout pill to zoom into the interface, or click the canvas to toggle 1.0x and 1.75x
-              inspection.
+              Follow a production from first draft to shoot day — bilingual script pages, Beat
+              Board cards, 1st AD stripboards, Day-Out-of-Days, camera shot lists, and daily call
+              sheets.
             </p>
           </div>
 
-          <div class="reel-shell" aria-label="Dynamic-zoom product screen recording and screenshots">
+          <div class="reel-shell" aria-label="SlateDraft Studio desktop workspace walkthrough">
             <div class="reel-topbar">
-              <div class="reel-chapters" role="tablist" aria-label="Product tour chapters">
+              <div class="reel-chapters" role="tablist" aria-label="Workspace walkthrough chapters">
                 <button
                   type="button"
                   class="reel-chapter-btn"
@@ -311,19 +311,11 @@
                 <button
                   type="button"
                   class="reel-ctrl-btn"
-                  id="reel-zoom-toggle"
-                  aria-pressed="true"
-                >
-                  <span id="reel-zoom-label">Dynamic Zoom: 1.7x</span>
-                </button>
-                <button
-                  type="button"
-                  class="reel-ctrl-btn"
                   id="reel-play-toggle"
                   aria-pressed="true"
-                  aria-label="Pause guided product tour"
+                  aria-label="Pause workspace walkthrough"
                 >
-                  <span id="reel-play-label">Pause Tour</span>
+                  <span id="reel-play-label">Pause</span>
                 </button>
               </div>
             </div>
@@ -332,20 +324,23 @@
               <span class="reel-hud-title" id="reel-hud-title">
                 Screenplay Editor — Bilingual Hindi/English Dialogue, Watermark &amp; Revision Marks
               </span>
-              <div class="reel-hud-hotspots" id="reel-hotspot-list" role="group" aria-label="Focal zoom targets">
+              <div class="reel-hud-hotspots" id="reel-hotspot-list" role="group" aria-label="Workspace highlights">
                 <button type="button" class="hotspot-pill is-active" data-hotspot="0">
-                  Bilingual Dialogue &amp; Watermark
+                  Full View
                 </button>
                 <button type="button" class="hotspot-pill" data-hotspot="1">
-                  Locked Scene Navigator
+                  Bilingual Dialogue &amp; Watermark
                 </button>
                 <button type="button" class="hotspot-pill" data-hotspot="2">
+                  Locked Scene Navigator
+                </button>
+                <button type="button" class="hotspot-pill" data-hotspot="3">
                   Right-Margin Asterisks (*)
                 </button>
               </div>
             </div>
 
-            <div class="reel-viewport is-zoomed" id="reel-viewport">
+            <div class="reel-viewport" id="reel-viewport">
               <div class="reel-camera" id="reel-camera">
                 <img
                   class="reel-shot-img"
@@ -355,8 +350,8 @@
                   width="1440"
                   height="900"
                 />
+                <div class="reel-reticle" id="reel-reticle" aria-hidden="true"></div>
               </div>
-              <div class="reel-reticle" id="reel-reticle" aria-hidden="true"></div>
             </div>
 
             <div class="shot-thumb-grid" role="group" aria-label="Select product screenshot">
@@ -2044,17 +2039,17 @@
           });
         });
 
-        // 6. Dynamic-Zoom Screen Recording Reel & Real Screenshot Inspector
+        // 6. Desktop Workspace Walkthrough & Real Screenshot Inspector
         var tourShots = [
           {
             src: './assets/shot-screenplay.png',
             alt: 'SlateDraft Studio Screenplay Editor with bilingual Hindi and English dialogue',
             title: 'Screenplay Editor — Bilingual Hindi/English Dialogue, Watermark & Revision Marks',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: 'Bilingual Dialogue & Watermark', ox: 57, oy: 74, scale: 1.58, rx: 58, ry: 72, rw: 560, rh: 175 },
-              { label: 'Locked Scene Navigator', ox: 10, oy: 54, scale: 1.75, rx: 14, ry: 54, rw: 290, rh: 280 },
-              { label: 'Right-Margin Asterisks (*)', ox: 78, oy: 58, scale: 1.68, rx: 80, ry: 58, rw: 220, rh: 260 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Bilingual Dialogue & Watermark', x: 46.26, y: 73.68, w: 30.13, h: 19.44, scale: 1.75 },
+              { label: 'Locked Scene Navigator', x: 0, y: 33.83, w: 17.99, h: 41.22, scale: 1.75 },
+              { label: 'Right-Margin Asterisks (*)', x: 79.6, y: 42.03, w: 5.1, h: 46.65, scale: 1.65 },
             ],
           },
           {
@@ -2062,9 +2057,9 @@
             alt: 'SlateDraft Studio Beat Board and Navarasa scene index cards',
             title: 'Beat Board — Scene Index Cards, 1/8th Page Counts & Navarasa Emotional Tones',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: 'Navarasa Emotional Tones', ox: 24, oy: 30, scale: 1.65, rx: 26, ry: 31, rw: 440, rh: 230 },
-              { label: 'Scene #14 Synopsis & Page Count', ox: 74, oy: 30, scale: 1.65, rx: 74, ry: 31, rw: 440, rh: 230 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Navarasa Emotional Tones', x: 9.44, y: 13.78, w: 27.04, h: 26.57, scale: 1.75 },
+              { label: 'Scene #14 Index Card', x: 63.52, y: 13.78, w: 27.04, h: 26.57, scale: 1.75 },
             ],
           },
           {
@@ -2072,9 +2067,9 @@
             alt: 'SlateDraft Studio 1st AD Production Stripboard with color-coded strips',
             title: '1st AD Stripboard — Color-Coded INT/EXT Strips, Company Moves & Auto-Scheduler',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: 'Day 1 Color Strips & Cast Pills', ox: 48, oy: 52, scale: 1.52, rx: 50, ry: 53, rw: 760, rh: 240 },
-              { label: 'Auto-Schedule by Location', ox: 28, oy: 28, scale: 1.78, rx: 31, ry: 28, rw: 430, rh: 125 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Day 1 Strips & Cast', x: 9.24, y: 33.67, w: 81.11, h: 38.39, scale: 1.2 },
+              { label: 'Auto-Schedule by Location', x: 9.24, y: 19.44, w: 81.11, h: 13.78, scale: 1.2 },
             ],
           },
           {
@@ -2082,9 +2077,9 @@
             alt: 'SlateDraft Studio Producer Day-Out-of-Days Cast Matrix',
             title: 'Producer DOOD — Automatic SW / W / H / WF Cast Windows & Paid Hold Alerts',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: 'SW / H / WF Cast Span Matrix', ox: 54, oy: 45, scale: 1.55, rx: 55, ry: 45, rw: 720, rh: 210 },
-              { label: 'Paid Hold-Day Budget Alert', ox: 70, oy: 24, scale: 1.8, rx: 69, ry: 24, rw: 360, rh: 95 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Cast Work & Hold Matrix', x: 9.44, y: 33.11, w: 81.11, h: 26.26, scale: 1.2 },
+              { label: 'Paid Hold-Day Alert', x: 62.85, y: 21.44, w: 26.66, h: 5.56, scale: 1.85 },
             ],
           },
           {
@@ -2092,9 +2087,9 @@
             alt: 'SlateDraft Studio Director and DOP Shot List',
             title: 'Director & DOP Shot List — Anamorphic Lenses, Camera Movement & Coverage Progress',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: 'Anamorphic 40mm & 50mm Setups', ox: 50, oy: 47, scale: 1.52, rx: 50, ry: 47, rw: 780, rh: 210 },
-              { label: 'On-Set Coverage Progress Bar', ox: 36, oy: 33, scale: 1.75, rx: 38, ry: 33, rw: 520, rh: 105 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Camera Setups & Lenses', x: 10.49, y: 36.89, w: 79.03, h: 32.67, scale: 1.2 },
+              { label: 'Scene Coverage Progress', x: 9.51, y: 29.11, w: 80.97, h: 7.56, scale: 1.2 },
             ],
           },
           {
@@ -2102,19 +2097,18 @@
             alt: 'SlateDraft Studio Daily Call Sheet Generator',
             title: 'Daily Call Sheet — 17:30 Crew Call, Hospital Logistics, Scheduled Scenes & Cast Calls',
             hotspots: [
-              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
-              { label: '17:30 Crew Call & Safety Logistics', ox: 50, oy: 44, scale: 1.52, rx: 50, ry: 44, rw: 780, rh: 215 },
-              { label: 'Scheduled Scenes & Cast H/M/W Table', ox: 50, oy: 76, scale: 1.55, rx: 50, ry: 75, rw: 780, rh: 220 },
+              { label: 'Full View', x: 0, y: 0, w: 0, h: 0, scale: 1 },
+              { label: 'Crew Call & Logistics', x: 10.83, y: 30.56, w: 77.92, h: 26.11, scale: 1.2 },
+              { label: 'Scenes & Cast Calls', x: 10.9, y: 59.94, w: 77.78, h: 35.06, scale: 1.2 },
             ],
           },
         ];
 
         var activeShotIdx = 0;
         var activeHotspotIdx = 0;
-        var isZoomEnabled = true;
         var isTourPlaying = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var tourTick = 0;
-        var TOUR_STEP_TICKS = 26; // ~2.6s per camera move (1.0x establishing -> zoom hotspot 1 -> pan hotspot 2)
+        var TOUR_STEP_TICKS = 26;
 
         var chapterBtns = Array.prototype.slice.call(document.querySelectorAll('.reel-chapter-btn'));
         var thumbBtns = Array.prototype.slice.call(document.querySelectorAll('.shot-thumb-btn'));
@@ -2124,8 +2118,6 @@
         var reelReticle = document.getElementById('reel-reticle');
         var reelHudTitle = document.getElementById('reel-hud-title');
         var reelHotspotList = document.getElementById('reel-hotspot-list');
-        var zoomToggleBtn = document.getElementById('reel-zoom-toggle');
-        var zoomLabel = document.getElementById('reel-zoom-label');
         var playToggleBtn = document.getElementById('reel-play-toggle');
         var playLabel = document.getElementById('reel-play-label');
 
@@ -2133,33 +2125,34 @@
           var shot = tourShots[activeShotIdx];
           if (!shot || !reelCamera || !reelViewport) return;
           var hs = shot.hotspots[activeHotspotIdx] || shot.hotspots[0];
-          var effectiveZoom = isZoomEnabled && hs.scale > 1.05;
+          var isHighlight = hs.scale > 1.05 && hs.w > 0 && hs.h > 0;
 
-          reelViewport.classList.toggle('is-zoomed', effectiveZoom);
-          if (zoomToggleBtn) zoomToggleBtn.setAttribute('aria-pressed', effectiveZoom ? 'true' : 'false');
-          if (zoomLabel) {
-            zoomLabel.textContent = effectiveZoom
-              ? 'Dynamic Zoom: ' + hs.scale.toFixed(2) + 'x'
-              : 'Full Window: 1.0x';
-          }
+          reelViewport.classList.toggle('is-zoomed', isHighlight);
 
-          if (!effectiveZoom) {
-            reelCamera.style.transformOrigin = '50% 50%';
-            reelCamera.style.transform = 'scale(1) translate(0%, 0%)';
+          if (!isHighlight) {
+            reelCamera.style.setProperty('--reel-scale', '1');
+            reelCamera.style.transform = 'translate(0%, 0%) scale(1)';
             return;
           }
 
-          var tx = (50 - hs.ox) * 0.36;
-          var ty = (50 - hs.oy) * 0.36;
-          reelCamera.style.transformOrigin = hs.ox + '% ' + hs.oy + '%';
+          var maxFitScale = Math.min(84 / hs.w, 78 / hs.h);
+          var s = Math.max(1.15, Math.min(hs.scale, maxFitScale));
+
+          var cx = hs.x + hs.w / 2;
+          var cy = hs.y + hs.h / 2;
+          var minT = 100 - 100 * s;
+          var tx = Math.min(0, Math.max(minT, 50 - cx * s));
+          var ty = Math.min(0, Math.max(minT, 50 - cy * s));
+
+          reelCamera.style.setProperty('--reel-scale', s.toFixed(3));
           reelCamera.style.transform =
-            'scale(' + hs.scale + ') translate(' + tx.toFixed(1) + '%, ' + ty.toFixed(1) + '%)';
+            'translate(' + tx.toFixed(2) + '%, ' + ty.toFixed(2) + '%) scale(' + s.toFixed(3) + ')';
 
           if (reelReticle) {
-            reelReticle.style.left = hs.rx + '%';
-            reelReticle.style.top = hs.ry + '%';
-            reelReticle.style.width = hs.rw + 'px';
-            reelReticle.style.height = hs.rh + 'px';
+            reelReticle.style.left = hs.x + '%';
+            reelReticle.style.top = hs.y + '%';
+            reelReticle.style.width = hs.w + '%';
+            reelReticle.style.height = hs.h + '%';
           }
         }
 
@@ -2174,7 +2167,6 @@
             btn.textContent = hs.label;
             btn.addEventListener('click', function () {
               activeHotspotIdx = idx;
-              isZoomEnabled = true;
               tourTick = 0;
               renderHotspotPills();
               applyCameraTransform();
@@ -2186,7 +2178,8 @@
         function selectTourShot(shotIdx, hotspotIdx) {
           activeShotIdx = (shotIdx + tourShots.length) % tourShots.length;
           var shot = tourShots[activeShotIdx];
-          activeHotspotIdx = hotspotIdx || 0;
+          var maxSpot = Math.max(0, shot.hotspots.length - 1);
+          activeHotspotIdx = Math.min(maxSpot, Math.max(0, hotspotIdx || 0));
           tourTick = 0;
 
           if (reelImg && reelImg.getAttribute('src') !== shot.src) {
@@ -2222,16 +2215,12 @@
           });
         });
 
-        if (zoomToggleBtn) {
-          zoomToggleBtn.addEventListener('click', function () {
-            isZoomEnabled = !isZoomEnabled;
-            applyCameraTransform();
-          });
-        }
-
         if (reelViewport) {
           reelViewport.addEventListener('click', function () {
-            isZoomEnabled = !isZoomEnabled;
+            var shot = tourShots[activeShotIdx];
+            activeHotspotIdx = activeHotspotIdx === 0 && shot && shot.hotspots.length > 1 ? 1 : 0;
+            tourTick = 0;
+            renderHotspotPills();
             applyCameraTransform();
           });
         }
@@ -2241,9 +2230,9 @@
           playToggleBtn.setAttribute('aria-pressed', isTourPlaying ? 'true' : 'false');
           playToggleBtn.setAttribute(
             'aria-label',
-            isTourPlaying ? 'Pause guided product tour' : 'Play guided product tour'
+            isTourPlaying ? 'Pause workspace walkthrough' : 'Play workspace walkthrough'
           );
-          playLabel.textContent = isTourPlaying ? 'Pause Tour' : 'Play Tour';
+          playLabel.textContent = isTourPlaying ? 'Pause' : 'Play';
         }
 
         if (playToggleBtn) {
@@ -2253,8 +2242,15 @@
           });
         }
 
+        var params = new URLSearchParams(window.location.search || '');
+        var initShot = parseInt(params.get('shot') || '0', 10) || 0;
+        var initSpot = parseInt(params.get('spot') || '0', 10) || 0;
+        if (params.get('paused') === '1') {
+          isTourPlaying = false;
+        }
+
         syncPlayButton();
-        selectTourShot(0, 0);
+        selectTourShot(initShot, initSpot);
 
         setInterval(function () {
           if (!isTourPlaying || document.hidden) return;
@@ -2276,7 +2272,6 @@
             tourTick = 0;
             if (activeHotspotIdx + 1 < shot.hotspots.length) {
               activeHotspotIdx += 1;
-              isZoomEnabled = true;
               renderHotspotPills();
               applyCameraTransform();
             } else {
