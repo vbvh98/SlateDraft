@@ -643,6 +643,258 @@ button {
 }
 
 /* ==========================================================================
+   FOCAL MOTION 0 — Dynamic-Zoom Screen Recording Player & Real App Shots
+   ========================================================================== */
+
+.reel-shell {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.reel-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #11110f;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reel-chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reel-chapter-btn {
+  position: relative;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--ink-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+  overflow: hidden;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out);
+}
+
+.reel-chapter-btn:hover {
+  color: var(--ink-primary);
+  border-color: var(--border-strong);
+}
+
+.reel-chapter-btn[aria-selected="true"] {
+  color: var(--ink-primary);
+  border-color: var(--border-accent);
+  background: var(--bg-surface-2);
+}
+
+.reel-chapter-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--accent);
+  transition: width 120ms linear;
+}
+
+.reel-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reel-ctrl-btn {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface-2);
+  color: var(--ink-primary);
+  font-family: var(--font-script);
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out);
+}
+
+.reel-ctrl-btn:hover {
+  border-color: var(--accent);
+}
+
+.reel-ctrl-btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--border-accent);
+}
+
+.reel-hud-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reel-hud-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.reel-hud-hotspots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.hotspot-pill {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-ground);
+  color: var(--ink-secondary);
+  font-family: var(--font-script);
+  font-size: 11px;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out);
+}
+
+.hotspot-pill:hover {
+  color: var(--ink-primary);
+  border-color: var(--border-strong);
+}
+
+.hotspot-pill.is-active {
+  color: var(--accent-on);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.reel-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #0a0a09;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.reel-viewport.is-zoomed {
+  cursor: zoom-out;
+}
+
+.reel-camera {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  transition:
+    transform 680ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 280ms var(--ease-out);
+  will-change: transform;
+}
+
+.reel-shot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Animated Spotlight Reticle on the Zoomed Target */
+.reel-reticle {
+  position: absolute;
+  width: 480px;
+  height: 150px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(245, 158, 11, 0.85);
+  background: rgba(245, 158, 11, 0.04);
+  box-shadow:
+    0 0 0 9999px rgba(10, 10, 9, 0.28),
+    0 0 28px rgba(245, 158, 11, 0.18);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.97);
+  opacity: 0;
+  transition:
+    left 680ms cubic-bezier(0.16, 1, 0.3, 1),
+    top 680ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 680ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 680ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms var(--ease-out),
+    transform 460ms var(--ease-out);
+}
+
+.reel-viewport.is-zoomed .reel-reticle {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Thumbnail Strip of All 6 Real Captures (No text captions under images) */
+.shot-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px 16px;
+  background: #11110f;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.shot-thumb-btn {
+  position: relative;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--bg-ground);
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    opacity var(--t-fast) var(--ease-out);
+  opacity: 0.62;
+}
+
+.shot-thumb-btn:hover {
+  opacity: 0.92;
+  border-color: var(--border-strong);
+}
+
+.shot-thumb-btn[aria-selected="true"] {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.shot-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
    FOCAL MOTION 1 — Live SlateDraft Workspace Switcher + Shared-Element Pill
    ========================================================================== */
 
@@ -1912,6 +2164,10 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .shot-thumb-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .editor-grid {
     grid-template-columns: 1fr;
   }
@@ -2005,6 +2261,11 @@ button {
     animation: none !important;
     filter: none !important;
     transform: none !important;
+  }
+
+  .reel-camera,
+  .reel-reticle {
+    transition: none !important;
   }
 
   .script-caret {

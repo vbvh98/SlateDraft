@@ -44,6 +44,7 @@
         </a>
 
         <nav class="site-nav" aria-label="Primary">
+          <a class="nav-link" href="#tour">Product Tour</a>
           <a class="nav-link" href="#product">Workspace</a>
           <a class="nav-link" href="#writers">Writers</a>
           <a class="nav-link" href="#production">Production Teams</a>
@@ -224,6 +225,227 @@
               </a>
             </div>
           </aside>
+        </div>
+      </section>
+
+      <!-- FOCAL MOTION 0: DYNAMIC-ZOOM PRODUCT SCREEN RECORDING & REAL SCREENSHOTS -->
+      <section class="section section-surface" id="tour">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Captured directly from the desktop release.</h2>
+            </div>
+            <p class="section-desc">
+              Watch the guided dynamic-zoom tour across all six studio workspaces, click any focal
+              callout pill to zoom into the interface, or click the canvas to toggle 1.0x and 1.75x
+              inspection.
+            </p>
+          </div>
+
+          <div class="reel-shell" aria-label="Dynamic-zoom product screen recording and screenshots">
+            <div class="reel-topbar">
+              <div class="reel-chapters" role="tablist" aria-label="Product tour chapters">
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="true"
+                  data-shot-idx="0"
+                >
+                  <span>Screenplay Editor</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="false"
+                  data-shot-idx="1"
+                >
+                  <span>Beat Board</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="false"
+                  data-shot-idx="2"
+                >
+                  <span>1st AD Stripboard</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="false"
+                  data-shot-idx="3"
+                >
+                  <span>Producer DOOD</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="false"
+                  data-shot-idx="4"
+                >
+                  <span>DOP Shot List</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-chapter-btn"
+                  role="tab"
+                  aria-selected="false"
+                  data-shot-idx="5"
+                >
+                  <span>Daily Call Sheet</span>
+                  <span class="reel-chapter-progress"></span>
+                </button>
+              </div>
+
+              <div class="reel-controls">
+                <button
+                  type="button"
+                  class="reel-ctrl-btn"
+                  id="reel-zoom-toggle"
+                  aria-pressed="true"
+                >
+                  <span id="reel-zoom-label">Dynamic Zoom: 1.7x</span>
+                </button>
+                <button
+                  type="button"
+                  class="reel-ctrl-btn"
+                  id="reel-play-toggle"
+                  aria-pressed="true"
+                  aria-label="Pause guided product tour"
+                >
+                  <span id="reel-play-label">Pause Tour</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="reel-hud-bar">
+              <span class="reel-hud-title" id="reel-hud-title">
+                Screenplay Editor — Bilingual Hindi/English Dialogue, Watermark &amp; Revision Marks
+              </span>
+              <div class="reel-hud-hotspots" id="reel-hotspot-list" role="group" aria-label="Focal zoom targets">
+                <button type="button" class="hotspot-pill is-active" data-hotspot="0">
+                  Bilingual Dialogue &amp; Watermark
+                </button>
+                <button type="button" class="hotspot-pill" data-hotspot="1">
+                  Locked Scene Navigator
+                </button>
+                <button type="button" class="hotspot-pill" data-hotspot="2">
+                  Right-Margin Asterisks (*)
+                </button>
+              </div>
+            </div>
+
+            <div class="reel-viewport is-zoomed" id="reel-viewport">
+              <div class="reel-camera" id="reel-camera">
+                <img
+                  class="reel-shot-img"
+                  id="reel-shot-img"
+                  src="./assets/shot-screenplay.png"
+                  alt="SlateDraft Studio desktop application workspace screenshot"
+                  width="1440"
+                  height="900"
+                />
+              </div>
+              <div class="reel-reticle" id="reel-reticle" aria-hidden="true"></div>
+            </div>
+
+            <div class="shot-thumb-grid" role="group" aria-label="Select product screenshot">
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="true"
+                aria-label="Inspect Screenplay Editor screenshot"
+                data-shot-thumb="0"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-screenplay.png"
+                  alt="Screenplay Editor thumbnail"
+                  loading="lazy"
+                />
+              </button>
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="false"
+                aria-label="Inspect Beat Board screenshot"
+                data-shot-thumb="1"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-beatboard.png"
+                  alt="Beat Board thumbnail"
+                  loading="lazy"
+                />
+              </button>
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="false"
+                aria-label="Inspect 1st AD Stripboard screenshot"
+                data-shot-thumb="2"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-stripboard.png"
+                  alt="1st AD Stripboard thumbnail"
+                  loading="lazy"
+                />
+              </button>
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="false"
+                aria-label="Inspect Producer Day-Out-of-Days screenshot"
+                data-shot-thumb="3"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-dood.png"
+                  alt="Producer DOOD thumbnail"
+                  loading="lazy"
+                />
+              </button>
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="false"
+                aria-label="Inspect Director and DOP Shot List screenshot"
+                data-shot-thumb="4"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-shotlist.png"
+                  alt="DOP Shot List thumbnail"
+                  loading="lazy"
+                />
+              </button>
+              <button
+                type="button"
+                class="shot-thumb-btn"
+                aria-selected="false"
+                aria-label="Inspect Daily Call Sheet screenshot"
+                data-shot-thumb="5"
+              >
+                <img
+                  class="shot-thumb-img"
+                  src="./assets/shot-callsheet.png"
+                  alt="Daily Call Sheet thumbnail"
+                  loading="lazy"
+                />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1822,7 +2044,248 @@
           });
         });
 
-        // 6. Mobile menu toggle
+        // 6. Dynamic-Zoom Screen Recording Reel & Real Screenshot Inspector
+        var tourShots = [
+          {
+            src: './assets/shot-screenplay.png',
+            alt: 'SlateDraft Studio Screenplay Editor with bilingual Hindi and English dialogue',
+            title: 'Screenplay Editor — Bilingual Hindi/English Dialogue, Watermark & Revision Marks',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: 'Bilingual Dialogue & Watermark', ox: 57, oy: 74, scale: 1.58, rx: 58, ry: 72, rw: 560, rh: 175 },
+              { label: 'Locked Scene Navigator', ox: 10, oy: 54, scale: 1.75, rx: 14, ry: 54, rw: 290, rh: 280 },
+              { label: 'Right-Margin Asterisks (*)', ox: 78, oy: 58, scale: 1.68, rx: 80, ry: 58, rw: 220, rh: 260 },
+            ],
+          },
+          {
+            src: './assets/shot-beatboard.png',
+            alt: 'SlateDraft Studio Beat Board and Navarasa scene index cards',
+            title: 'Beat Board — Scene Index Cards, 1/8th Page Counts & Navarasa Emotional Tones',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: 'Navarasa Emotional Tones', ox: 24, oy: 30, scale: 1.65, rx: 26, ry: 31, rw: 440, rh: 230 },
+              { label: 'Scene #14 Synopsis & Page Count', ox: 74, oy: 30, scale: 1.65, rx: 74, ry: 31, rw: 440, rh: 230 },
+            ],
+          },
+          {
+            src: './assets/shot-stripboard.png',
+            alt: 'SlateDraft Studio 1st AD Production Stripboard with color-coded strips',
+            title: '1st AD Stripboard — Color-Coded INT/EXT Strips, Company Moves & Auto-Scheduler',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: 'Day 1 Color Strips & Cast Pills', ox: 48, oy: 52, scale: 1.52, rx: 50, ry: 53, rw: 760, rh: 240 },
+              { label: 'Auto-Schedule by Location', ox: 28, oy: 28, scale: 1.78, rx: 31, ry: 28, rw: 430, rh: 125 },
+            ],
+          },
+          {
+            src: './assets/shot-dood.png',
+            alt: 'SlateDraft Studio Producer Day-Out-of-Days Cast Matrix',
+            title: 'Producer DOOD — Automatic SW / W / H / WF Cast Windows & Paid Hold Alerts',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: 'SW / H / WF Cast Span Matrix', ox: 54, oy: 45, scale: 1.55, rx: 55, ry: 45, rw: 720, rh: 210 },
+              { label: 'Paid Hold-Day Budget Alert', ox: 70, oy: 24, scale: 1.8, rx: 69, ry: 24, rw: 360, rh: 95 },
+            ],
+          },
+          {
+            src: './assets/shot-shotlist.png',
+            alt: 'SlateDraft Studio Director and DOP Shot List',
+            title: 'Director & DOP Shot List — Anamorphic Lenses, Camera Movement & Coverage Progress',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: 'Anamorphic 40mm & 50mm Setups', ox: 50, oy: 47, scale: 1.52, rx: 50, ry: 47, rw: 780, rh: 210 },
+              { label: 'On-Set Coverage Progress Bar', ox: 36, oy: 33, scale: 1.75, rx: 38, ry: 33, rw: 520, rh: 105 },
+            ],
+          },
+          {
+            src: './assets/shot-callsheet.png',
+            alt: 'SlateDraft Studio Daily Call Sheet Generator',
+            title: 'Daily Call Sheet — 17:30 Crew Call, Hospital Logistics, Scheduled Scenes & Cast Calls',
+            hotspots: [
+              { label: 'Full Window (1.0x)', ox: 50, oy: 50, scale: 1.0, rx: 50, ry: 50, rw: 0, rh: 0 },
+              { label: '17:30 Crew Call & Safety Logistics', ox: 50, oy: 44, scale: 1.52, rx: 50, ry: 44, rw: 780, rh: 215 },
+              { label: 'Scheduled Scenes & Cast H/M/W Table', ox: 50, oy: 76, scale: 1.55, rx: 50, ry: 75, rw: 780, rh: 220 },
+            ],
+          },
+        ];
+
+        var activeShotIdx = 0;
+        var activeHotspotIdx = 0;
+        var isZoomEnabled = true;
+        var isTourPlaying = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var tourTick = 0;
+        var TOUR_STEP_TICKS = 26; // ~2.6s per camera move (1.0x establishing -> zoom hotspot 1 -> pan hotspot 2)
+
+        var chapterBtns = Array.prototype.slice.call(document.querySelectorAll('.reel-chapter-btn'));
+        var thumbBtns = Array.prototype.slice.call(document.querySelectorAll('.shot-thumb-btn'));
+        var reelImg = document.getElementById('reel-shot-img');
+        var reelCamera = document.getElementById('reel-camera');
+        var reelViewport = document.getElementById('reel-viewport');
+        var reelReticle = document.getElementById('reel-reticle');
+        var reelHudTitle = document.getElementById('reel-hud-title');
+        var reelHotspotList = document.getElementById('reel-hotspot-list');
+        var zoomToggleBtn = document.getElementById('reel-zoom-toggle');
+        var zoomLabel = document.getElementById('reel-zoom-label');
+        var playToggleBtn = document.getElementById('reel-play-toggle');
+        var playLabel = document.getElementById('reel-play-label');
+
+        function applyCameraTransform() {
+          var shot = tourShots[activeShotIdx];
+          if (!shot || !reelCamera || !reelViewport) return;
+          var hs = shot.hotspots[activeHotspotIdx] || shot.hotspots[0];
+          var effectiveZoom = isZoomEnabled && hs.scale > 1.05;
+
+          reelViewport.classList.toggle('is-zoomed', effectiveZoom);
+          if (zoomToggleBtn) zoomToggleBtn.setAttribute('aria-pressed', effectiveZoom ? 'true' : 'false');
+          if (zoomLabel) {
+            zoomLabel.textContent = effectiveZoom
+              ? 'Dynamic Zoom: ' + hs.scale.toFixed(2) + 'x'
+              : 'Full Window: 1.0x';
+          }
+
+          if (!effectiveZoom) {
+            reelCamera.style.transformOrigin = '50% 50%';
+            reelCamera.style.transform = 'scale(1) translate(0%, 0%)';
+            return;
+          }
+
+          var tx = (50 - hs.ox) * 0.36;
+          var ty = (50 - hs.oy) * 0.36;
+          reelCamera.style.transformOrigin = hs.ox + '% ' + hs.oy + '%';
+          reelCamera.style.transform =
+            'scale(' + hs.scale + ') translate(' + tx.toFixed(1) + '%, ' + ty.toFixed(1) + '%)';
+
+          if (reelReticle) {
+            reelReticle.style.left = hs.rx + '%';
+            reelReticle.style.top = hs.ry + '%';
+            reelReticle.style.width = hs.rw + 'px';
+            reelReticle.style.height = hs.rh + 'px';
+          }
+        }
+
+        function renderHotspotPills() {
+          if (!reelHotspotList) return;
+          var shot = tourShots[activeShotIdx];
+          reelHotspotList.innerHTML = '';
+          shot.hotspots.forEach(function (hs, idx) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'hotspot-pill' + (idx === activeHotspotIdx ? ' is-active' : '');
+            btn.textContent = hs.label;
+            btn.addEventListener('click', function () {
+              activeHotspotIdx = idx;
+              isZoomEnabled = true;
+              tourTick = 0;
+              renderHotspotPills();
+              applyCameraTransform();
+            });
+            reelHotspotList.appendChild(btn);
+          });
+        }
+
+        function selectTourShot(shotIdx, hotspotIdx) {
+          activeShotIdx = (shotIdx + tourShots.length) % tourShots.length;
+          var shot = tourShots[activeShotIdx];
+          activeHotspotIdx = hotspotIdx || 0;
+          tourTick = 0;
+
+          if (reelImg && reelImg.getAttribute('src') !== shot.src) {
+            reelImg.src = shot.src;
+            reelImg.alt = shot.alt;
+          }
+          if (reelHudTitle) reelHudTitle.textContent = shot.title;
+
+          chapterBtns.forEach(function (btn, idx) {
+            var selected = idx === activeShotIdx;
+            btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+            var bar = btn.querySelector('.reel-chapter-progress');
+            if (bar) bar.style.width = selected ? '15%' : '0%';
+          });
+
+          thumbBtns.forEach(function (btn, idx) {
+            btn.setAttribute('aria-selected', idx === activeShotIdx ? 'true' : 'false');
+          });
+
+          renderHotspotPills();
+          applyCameraTransform();
+        }
+
+        chapterBtns.forEach(function (btn, idx) {
+          btn.addEventListener('click', function () {
+            selectTourShot(idx, 0);
+          });
+        });
+
+        thumbBtns.forEach(function (btn, idx) {
+          btn.addEventListener('click', function () {
+            selectTourShot(idx, 0);
+          });
+        });
+
+        if (zoomToggleBtn) {
+          zoomToggleBtn.addEventListener('click', function () {
+            isZoomEnabled = !isZoomEnabled;
+            applyCameraTransform();
+          });
+        }
+
+        if (reelViewport) {
+          reelViewport.addEventListener('click', function () {
+            isZoomEnabled = !isZoomEnabled;
+            applyCameraTransform();
+          });
+        }
+
+        function syncPlayButton() {
+          if (!playToggleBtn || !playLabel) return;
+          playToggleBtn.setAttribute('aria-pressed', isTourPlaying ? 'true' : 'false');
+          playToggleBtn.setAttribute(
+            'aria-label',
+            isTourPlaying ? 'Pause guided product tour' : 'Play guided product tour'
+          );
+          playLabel.textContent = isTourPlaying ? 'Pause Tour' : 'Play Tour';
+        }
+
+        if (playToggleBtn) {
+          playToggleBtn.addEventListener('click', function () {
+            isTourPlaying = !isTourPlaying;
+            syncPlayButton();
+          });
+        }
+
+        syncPlayButton();
+        selectTourShot(0, 0);
+
+        setInterval(function () {
+          if (!isTourPlaying || document.hidden) return;
+          tourTick += 1;
+          var shot = tourShots[activeShotIdx];
+          var totalTicksForShot = TOUR_STEP_TICKS * shot.hotspots.length;
+          var currentShotProgress = Math.min(
+            100,
+            Math.round(((activeHotspotIdx * TOUR_STEP_TICKS + tourTick) / totalTicksForShot) * 100)
+          );
+
+          var activeChapterBtn = chapterBtns[activeShotIdx];
+          if (activeChapterBtn) {
+            var bar = activeChapterBtn.querySelector('.reel-chapter-progress');
+            if (bar) bar.style.width = currentShotProgress + '%';
+          }
+
+          if (tourTick >= TOUR_STEP_TICKS) {
+            tourTick = 0;
+            if (activeHotspotIdx + 1 < shot.hotspots.length) {
+              activeHotspotIdx += 1;
+              isZoomEnabled = true;
+              renderHotspotPills();
+              applyCameraTransform();
+            } else {
+              selectTourShot(activeShotIdx + 1, 0);
+            }
+          }
+        }, 100);
+
+        // 7. Mobile menu toggle
         var menuBtn = document.getElementById('menu-toggle');
         var drawer = document.getElementById('mobile-drawer');
         if (menuBtn && drawer) {
